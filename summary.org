@@ -1,0 +1,72 @@
+#+TITLE: Summary 
+#+AUTHOR: Matthew Henderson, PhD, FCACB
+#+DATE: \today
+
+* Summary 
+
+- This analysis uses data from sm1st and aaac tables in the sm database
+  - this data was pulled from the AIH
+- Results from SM1ST run on Bill was compared to AAAC run on Larry, Joe and Jenna Jr
+- Patient samples, CDC linearity materials and qualitity control
+  materials are used to span a range of values relevant to newborns
+  screening
+
+
+** Primary Amino Acids
+- [X] Ala
+  - use the population based RRF (Figure [[fig:Ala_pop]])
+- [X] Arg
+  - use the population based RRF (Figure [[fig:Arg_pop]])
+- [ ] ASA
+  - ASA not measured in AAAC method, Cit/ASA comparison required
+- [X] Cit
+  - use the population based RRF (Figure [[fig:Cit_pop]])
+  - what happened in mid May?(Figure [[fig:Cit_ts]])
+    - change in transition table
+  - population data trimmed to after mid may
+- [X] Leu
+  - use the population based RRF (Figure [[fig:Leu_pop]])
+- [X] Met
+  - use the population based RRF (Figure [[fig:Met_pop]])  
+- [X] Phe
+  - Additional review required, and potientially additional analysis with a subset of data.
+  - Population data is slightly elevated after RRF adjustment (Figures [[fig:Phe_pop]], [[fig:Phe_ts]])
+  - QC data looks very good (Figure [[fig:Phe_ts]])    
+- [X] Tyr
+  - removed population data prior to May 15tha
+  - use the population based RRF (Figure [[fig:Tyr_pop]])  
+- [ ] SUAC
+  - Additional analysis and review required, and potientially additional analysis with a subset of data.
+  - Neither population or QC RRF adjustments work well
+    - High level APPOS1 removed prior to RRF calculation
+  
+- [X] GUAC
+  - use the QC based RRF (Figures [[fig:GUAC_QC_pop]] , [[fig:GUAC_QC_ts]])
+** Primary Acylcarnitines
+
+- [X] C0
+  - use the population based RRF (Figure [[fig:C0_pop]])  
+- [X] C2
+  - use the population based RRF (Figure [[fig:C2_pop]])  
+- [X] C3
+  - use the population based RRF (Figure [[fig:C3_pop]])  
+- [X] C5
+  - use the QC based RRF (Figure [[fig:C5_QC_pop]], [[fig:C5_QC_ts]])
+  - High level APPOS2 removed prior to RRF calculation
+- [X] C5DC
+  - use the population based RRF adjustment (Figure [[fig:C5_pop]], [[fig:C5_ts]]))
+  - send more samples to second tier analysis to resolve C5DC from C6OH
+- [X] C6
+  - use the QC based RRF (Figures [[fig:C6_QC_pop]], [[fig:C6_QC_ts]])
+- [X] C8
+  - use the QC based based RRF adjustment (Figure [[fig:C8_QC_pop]], [[fig:C8_QC_ts]]))  
+- [X] C10
+  - use the population based RRF (Figure [[fig:C10_pop]], [[fig:C10_ts]]))  
+- [X] C141
+  - use the QC based RRF (Figures [[fig:C141_QC_pop]], [[fig:C141_QC_ts]])
+- [X] C16
+  - use the population based RRF (Figure [[fig:C16_pop]], [[fig:C16_ts]]))  
+- [X] C16OH
+  - use the QC based RRF (Figures [[fig:C16OH_QC_pop]], [[fig:C16OH_QC_ts]])
+- [X] C18 
+  - use the population based RRF (Figure [[fig:C18_pop]], [[fig:C18_ts]]))  

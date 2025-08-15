@@ -1,0 +1,512 @@
+#+TITLE:   Bill SM1ST method comparison and RRF adjustment 
+#+AUTHOR:    Brittany Wong, Nate McIntosh, Matthew Henderson
+#+DATE:      \today
+#+INCLUDE: "./summary.org" :lines "4-"
+* Population and linearity based RRF
+** Primary Amino Acids
+*** Ala
+#+CAPTION[]:Ala population and linearity based RRF adjustment
+#+NAME: fig:Ala_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Ala.pdf]]
+
+#+CAPTION[]:Ala QC and MOI time series population based RRF
+#+NAME: fig:Ala_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Ala_ts.pdf]]
+
+\clearpage
+*** Arg
+#+CAPTION[]:Arg population and linearity based RRF adjustment
+#+NAME: fig:Arg_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Arg.pdf]]
+
+#+CAPTION[]:Arg QC and MOI time series population based RRF
+#+NAME: fig:Arg_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Arg_ts.pdf]]
+
+\clearpage
+*** Cit
+#+CAPTION[]:Cit population and linearity based RRF adjustment
+#+NAME: fig:Cit_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Cit.pdf]]
+
+#+CAPTION[]:Cit QC and MOI time series population based RRF
+#+NAME: fig:Cit_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Cit_ts.pdf]]
+
+\clearpage
+*** Leu
+#+CAPTION[]:Leu population and linearity based RRF adjustment
+#+NAME: fig:Leu_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Leu.pdf]]
+
+#+CAPTION[]:Leu QC and MOI time series population based RRF
+#+NAME: fig:Leu_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Leu_ts.pdf]]
+
+\clearpage
+*** Met
+#+CAPTION[]:Met population and linearity based RRF adjustment
+#+NAME: fig:Met_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Met.pdf]]
+
+#+CAPTION[]:Met QC and MOI time series population based RRF
+#+NAME: fig:Met_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Met_ts.pdf]]
+
+\clearpage
+*** Phe
+#+CAPTION[]:Phe population and linearity based RRF adjustment
+#+NAME: fig:Phe_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Phe.pdf]]
+
+#+CAPTION[]:Phe QC and MOI time series population based RRF
+#+NAME: fig:Phe_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Phe_ts.pdf]]
+
+\clearpage
+*** Tyr
+#+CAPTION[]:Tyr population and linearity based RRF adjustment
+#+NAME: fig:Tyr_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Tyr.pdf]]
+
+#+CAPTION[]:Tyr QC and MOI time series population based RRF
+#+NAME: fig:Tyr_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Tyr_ts.pdf]]
+
+\clearpage
+*** SUAC
+#+CAPTION[]:SUAC population and linearity based RRF adjustment
+#+NAME: fig:SUAC_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/SUAC.pdf]]
+
+#+CAPTION[]:SUAC QC and MOI time series population based RRF
+#+NAME: fig:SUAC_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/SUAC_ts.pdf]]
+
+\clearpage
+*** GUAC
+#+CAPTION[]:GUAC population and linearity based RRF adjustment
+#+NAME: fig:GUAC_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/GUAC.pdf]]
+
+#+CAPTION[]:GUAC QC and MOI time series population based RRF
+#+NAME: fig:GUAC_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/GUAC_ts.pdf]]
+
+\clearpage
+
+** Primary Acylcarnitines
+*** C0
+#+CAPTION[]:C0 population and linearity based RRF adjustment
+#+NAME: fig:C0_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C0.pdf]]
+
+#+CAPTION[]:C0 QC and MOI timeseries with population based RRF
+#+NAME: fig:C0_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C0_ts.pdf]]
+
+\clearpage
+*** C2
+#+CAPTION[]:C2 population and linearity based RRF adjustment
+#+NAME: fig:C2_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C2.pdf]]
+
+#+CAPTION[]:C2 QC and MOI timeseries with population based RRF
+#+NAME: fig:C2_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C2_ts.pdf]]
+
+\clearpage
+*** C3
+#+CAPTION[]:C3 population and linearity based RRF adjustment
+#+NAME: fig:C3_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C3.pdf]]
+
+#+CAPTION[]:C3 QC and MOI timeseries with population based RRF
+#+NAME: fig:C3_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C3_ts.pdf]]
+
+\clearpage
+*** C5
+#+CAPTION[]:C5 population and linearity based RRF adjustment
+#+NAME: fig:C5_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C5.pdf]]
+
+#+CAPTION[]:C5 QC and MOI timeseries with population based RRF
+#+NAME: fig:C5_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C5_ts.pdf]]
+
+\clearpage
+*** C5DC
+#+CAPTION[]:C5DC population and linearity based RRF adjustment
+#+NAME: fig:C5DC_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C5DC.pdf]]
+
+#+CAPTION[]:C5DC QC and MOI timeseries with population based RRF
+#+NAME: fig:C5DC_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C5DC_ts.pdf]]
+
+\clearpage
+*** C6
+#+CAPTION[]:C6 population and linearity based RRF adjustment
+#+NAME: fig:C6_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C6.pdf]]
+
+#+CAPTION[]:C6 QC and MOI timeseries with population based RRF
+#+NAME: fig:C6_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C6_ts.pdf]]
+
+\clearpage
+*** C8
+#+CAPTION[]:C8 population and linearity based RRF adjustment
+#+NAME: fig:C8_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C8.pdf]]
+
+#+CAPTION[]:C8 QC and MOI timeseries with population based RRF
+#+NAME: fig:C8_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C8_ts.pdf]]
+
+\clearpage
+*** C10
+#+CAPTION[]:C10 population and linearity based RRF adjustment
+#+NAME: fig:C10_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C10.pdf]]
+
+#+CAPTION[]:C10 QC and MOI timeseries with population based RRF
+#+NAME: fig:C10_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C10_ts.pdf]]
+
+\clearpage
+*** C141
+#+CAPTION[]:C141 population and linearity based RRF adjustment
+#+NAME: fig:C141_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C141.pdf]]
+
+#+CAPTION[]:C141 QC and MOI timeseries with population based RRF
+#+NAME: fig:C141_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C141_ts.pdf]]
+
+\clearpage
+*** C16
+#+CAPTION[]:C16 population and linearity based RRF adjustment
+#+NAME: fig:C16_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C16.pdf]]
+
+#+CAPTION[]:C16 QC and MOI timeseries with population based RRF
+#+NAME: fig:C16_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C16_ts.pdf]]
+
+\clearpage
+*** C16OH
+#+CAPTION[]:C16OH population and linearity based RRF adjustment
+#+NAME: fig:C16OH_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C16OH.pdf]]
+
+#+CAPTION[]:C16OH QC and MOI timeseries with population based RRF
+#+NAME: fig:C16OH_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C16OH_ts.pdf]]
+
+\clearpage
+*** C18
+#+CAPTION[]:C18 population and linearity based RRF adjustment
+#+NAME: fig:C18_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C18.pdf]]
+
+#+CAPTION[]:C18 QC and MOI timeseries with population based RRF
+#+NAME: fig:C18_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C18_ts.pdf]]
+
+\clearpage
+* QC and linearity material based RRF
+** Low concentration primary amino acids
+*** SUAC
+#+CAPTION[]:SUAC QC and linearity based RRF adjustment
+#+NAME: fig:SUAC_QC_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/SUAC_QC.pdf]]
+
+#+CAPTION[]:SUAC QC and MOI time series with QC and linearity based RRF adjustment
+#+NAME: fig:SUAC_QC_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/SUAC_QC_ts.pdf]]
+
+\clearpage
+*** GUAC
+#+CAPTION[]:GUAC QC and linearity based RRF adjustment
+#+NAME: fig:GUAC_QC_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/GUAC_QC.pdf]]
+
+#+CAPTION[]:GUAC QC and MOI time series with QC and linearity based RRF adjustment
+#+NAME: fig:GUAC_QC_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/GUAC_QC_ts.pdf]]
+
+\clearpage
+
+** Low concentration primary acylcarnitines
+*** C5
+#+CAPTION[]:C5 population and linearity based RRF adjustment
+#+NAME: fig:C5_QC_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C5_QC.pdf]]
+
+#+CAPTION[]:C5 QC and MOI time series with QC and linearity based RRF adjustment
+#+NAME: fig:C5_QC_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C5_QC_ts.pdf]]
+
+\clearpage
+*** C5DC
+#+CAPTION[]:C5DC population and linearity based RRF adjustment
+#+NAME: fig:C5DC_QC_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C5DC_QC.pdf]]
+
+#+CAPTION[]:C5DC QC and MOI time series with QC and linearity based RRF adjustment
+#+NAME: fig:C5DC_QC_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C5DC_QC_ts.pdf]]
+
+\clearpage
+*** C6
+#+CAPTION[]:C6 population and linearity based RRF adjustment
+#+NAME: fig:C6_QC_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C6_QC.pdf]]
+
+#+CAPTION[]:C6 QC and MOI time series with QC and linearity based RRF adjustment
+#+NAME: fig:C6_QC_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C6_QC_ts.pdf]]
+
+\clearpage
+*** C8
+#+CAPTION[]:C8 population and linearity based RRF adjustment
+#+NAME: fig:C8_QC_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C8_QC.pdf]]
+
+#+CAPTION[]:C8 QC and MOI time series with QC and linearity based RRF adjustment
+#+NAME: fig:C8_QC_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C8_QC_ts.pdf]]
+
+\clearpage
+*** C141
+#+CAPTION[]:C141 population and linearity based RRF adjustment
+#+NAME: fig:C141_QC_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C141_QC.pdf]]
+
+#+CAPTION[]:C141 QC and MOI time series with QC and linearity based RRF adjustment
+#+NAME: fig:C141_QC_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C141_QC_ts.pdf]]
+
+\clearpage
+*** C16OH
+#+CAPTION[]:C16OH population and linearity based RRF adjustment
+#+NAME: fig:C16OH_QC_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C16OH_QC.pdf]]
+
+#+CAPTION[]:C16OH QC and MOI time series with QC and linearity based RRF adjustment
+#+NAME: fig:C16OH_QC_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C16OH_QC_ts.pdf]]
+
+\clearpage
+* SM1ST and AAAC comparison
+** Primary Amino Acids
+*** Ala
+#+CAPTION[]:Ala SM1ST and AAAC regression after RRF adjustment
+#+NAME: fig:Ala_reg
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Ala_regression.pdf]]
+
+\clearpage
+*** Arg
+#+CAPTION[]:Arg SM1ST and AAAC regression after RRF adjustment
+#+NAME: fig:Arg_reg
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Arg_regression.pdf]]
+
+\clearpage
+*** Cit
+#+CAPTION[]:Cit SM1ST and AAAC regression after RRF adjustment
+#+NAME: fig:Cit_reg
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Cit_regression.pdf]]
+
+\clearpage
+*** Leu
+#+CAPTION[]:Leu SM1ST and AAAC regression after RRF adjustment
+#+NAME: fig:Leu_reg
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Leu_regression.pdf]]
+
+\clearpage
+*** Met
+#+CAPTION[]:Met SM1ST and AAAC regression after RRF adjustment
+#+NAME: fig:Met_reg
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Met_regression.pdf]]
+
+\clearpage
+*** Phe
+#+CAPTION[]:Phe SM1ST and AAAC regression after RRF adjustment
+#+NAME: fig:Phe_reg
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Phe_regression.pdf]]
+
+\clearpage
+*** Tyr
+#+CAPTION[]:Tyr SM1ST and AAAC regression after RRF adjustment
+#+NAME: fig:Tyr_reg
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Tyr_regression.pdf]]
+
+\clearpage
+*** SUAC
+#+CAPTION[]:SUAC SM1ST and AAAC regression after RRF adjustment
+#+NAME: fig:SUAC_reg
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/SUAC_regression.pdf]]
+
+\clearpage
+*** GUAC
+#+CAPTION[]:GUAC SM1ST and AAAC regression after RRF adjustment
+#+NAME: fig:GUAC_reg
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/GUAC_regression.pdf]]
+
+\clearpage
+
+** Primary Acylcarnitines
+*** C0
+#+CAPTION[]:C0 SM1ST and AAAC regression after RRF adjustment
+#+NAME: fig:C0_reg
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C0_regression.pdf]]
+
+\clearpage
+*** C2
+#+CAPTION[]:C2 SM1ST and AAAC regression after RRF adjustment
+#+NAME: fig:C2_reg
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C2_regression.pdf]]
+
+\clearpage
+*** C3
+#+CAPTION[]:C3 SM1ST and AAAC regression after RRF adjustment
+#+NAME: fig:C3_reg
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C3_regression.pdf]]
+
+\clearpage
+*** C5
+#+CAPTION[]:C5 SM1ST and AAAC regression after RRF adjustment
+#+NAME: fig:C5_reg
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C5_regression.pdf]]
+
+\clearpage
+*** C5DC
+#+CAPTION[]:C5DC SM1ST and AAAC regression after RRF adjustment
+#+NAME: fig:C5DC_reg
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C5DC_regression.pdf]]
+
+\clearpage
+*** C6
+#+CAPTION[]:C6 SM1ST and AAAC regression after RRF adjustment
+#+NAME: fig:C6_reg
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C6_regression.pdf]]
+
+\clearpage
+*** C8
+#+CAPTION[]:C8 SM1ST and AAAC regression after RRF adjustment
+#+NAME: fig:C8_reg
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C8_regression.pdf]]
+
+\clearpage
+*** C10
+#+CAPTION[]:C10 SM1ST and AAAC regression after RRF adjustment
+#+NAME: fig:C10_reg
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C10_regression.pdf]]
+
+\clearpage
+*** C141
+#+CAPTION[]:C141 SM1ST and AAAC regression after RRF adjustment
+#+NAME: fig:C141_reg
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C141_regression.pdf]]
+
+\clearpage
+*** C16
+#+CAPTION[]:C16 SM1ST and AAAC regression after RRF adjustment
+#+NAME: fig:C16_reg
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C16_regression.pdf]]
+
+\clearpage
+*** C16OH
+#+CAPTION[]:C16OH SM1ST and AAAC regression after RRF adjustment
+#+NAME: fig:C16OH_reg
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C16OH_regression.pdf]]
+
+\clearpage
+*** C18
+#+CAPTION[]:C18 SM1ST and AAAC regression after RRF adjustment
+#+NAME: fig:C18_reg
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/C18_regression.pdf]]
+
+\clearpage
+

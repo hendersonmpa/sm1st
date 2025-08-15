@@ -1,9 +1,13 @@
-
 source("./functions.r")
-
+source("./queries.r")
 ## CDC adjustment
 ## SUAC
-suaccdc <- read.csv(file = "./data/SUAC_CDClin.csv")
+suacpop <- get_data("SUAC", 10, query_population)
+suaclin <- get_data("SUAC", 10, query_linearity)
+suacqc <- get_viewdata("SUAC", query_qc)
+suacmoi <- get_viewdata("SUAC", query_moi)
+
+suaccdc <- read.csv(file = "../data/SUAC_CDClin.csv")
 suaccdc_comp <- merge(suaclin, suaccdc, by= "sample")
 
 ### CDC mean value
@@ -81,7 +85,6 @@ dev.off()
 
 par(mfrow=c(1,1))
 
-make_plots("SUAC_CDC", suacpop, suaclin, suaccdcrrf, 4, 25 )
-make_ts("SUAC_CDC", suacqc, suaccdcrrf)
-make_ts("SUAC_CDC", suacmoi, suaccdcrrf, moi = TRUE)
-
+make_plots("SUAC_CDC", suacpop, suaclin, suac_mean_rrf, 4, 25 )
+make_ts("SUAC_CDC", suacqc, suacmoi suac_mean_rrf)
+make_mcr("SUAC", suacpop, suaclin, suacqc, c("SUAC" = suac_mean_rrf))

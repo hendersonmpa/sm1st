@@ -71,7 +71,7 @@ make_plots <- function(analyte, population_data, linearity_data, rrf, xcor,  yco
         geom_abline(slope = 1, intercept = 0, colour = "black", lty = 2) +
         labs(title = "Linearity", x ="AAAC", y = "SM1ST") 
 
-    ## combined rrf adjusted
+   ## combined rrf adjusted
     rrf_combi_scatter <- ggplot(combined_data, aes(x = aaac, y = sm1strrf, colour = aaac_instrument)) +
         geom_point(alpha = 0.2) +
         geom_smooth(method = lm, se = FALSE) +
@@ -90,38 +90,35 @@ make_plots <- function(analyte, population_data, linearity_data, rrf, xcor,  yco
     ggsave(filename = figure_pathname, plot = p_anot)
 }
 
-
-make_ts <- function(analyte, data, rrf, moi = FALSE){
+make_ts <- function(analyte, qcdata, moidata, rrf) {
     analyte_str <- str_remove(analyte, "[:-[:space:]]")
     title_str <- paste0(analyte_str," RRF: ", round(rrf, digits = 3))
+    figure_pathname <- paste0("../figures/", analyte_str, "_ts.pdf")
 
-    data$sm1strrf <- data$sm1st * rrf 
-    long_data <- data %>% pivot_longer(cols = c(sm1st, aaac, sm1strrf), names_to = "method", values_to = "mean") 
+    qcdata$sm1strrf <- qcdata$sm1st * rrf
+    long_qcdata <- qcdata %>% pivot_longer(cols = c(sm1st, aaac, sm1strrf), names_to = "method", values_to = "mean")
 
-    if(moi){
-        figure_pathname <- paste0("../figures/", analyte_str, "_moi_ts.pdf")
-        p <- ggplot(long_data, aes(x = date, y = mean, colour = method)) +
-            geom_line() +
-            scale_x_date(date_labels = "%b-%y") +
-            ggtitle(title_str) +
-            ylab("conc") +
-            xlab("date")
-    } else {
-        figure_pathname <- paste0("../figures/", analyte_str, "_qc_ts.pdf")
-        p <- ggplot(long_data, aes(x = date, y = mean, colour = method)) +
-            geom_line() +
-            scale_x_date(date_labels = "%b-%y") +
-            facet_grid(sample~., scales = "free_y") +
-            ggtitle(title_str) +
-            ylab("conc") +
-            xlab("date")
-    }
-    ggsave(filename = figure_pathname, plot = p)
+    moidata$sm1strrf <- moidata$sm1st * rrf
+    moidata$sample <- "moi"
+    
+    long_moidata <- moidata %>% pivot_longer(cols = c(sm1st, aaac, sm1strrf), names_to = "method", values_to = "mean") 
+    combined_data <- rbind(long_qcdata, long_moidata)
+
+    ts <- ggplot(combined_data, aes(x = date, y = mean, colour = method)) +
+        geom_line() +
+        scale_x_date(date_labels = "%b-%y") +
+        facet_grid(sample~., scales = "free_y") +
+        ggtitle(title_str) +
+        ylab("conc") +
+        xlab("date")
+
+    ggsave(filename = figure_pathname, plot = ts)
 }
 
 
 make_mcr <- function(analyte, population, linearity,qc, rrf_list = primary_analytes){
-    rrf <- primary_analytes[[analyte]]
+## TODO set plot axis zero and max value in combined data set
+    rrf <- rrf_list[[analyte]]
     analyte_str <- str_remove(analyte, "[:-[:space:]]")
     figure_pathname <- paste0("../figures/", analyte_str, "_regression.pdf")
     title_str <- paste0(analyte_str," RRF: ", round(rrf, digits = 3))
@@ -142,7 +139,7 @@ make_mcr <- function(analyte, population, linearity,qc, rrf_list = primary_analy
     model <- lm(sm1st ~ aaac, data = combined_data)
     ## rounded coefficients for better output
     cf <- round(coef(model), 2)
-    c <- round(cor(combined_data$aaac, combined_data$sm1strrf)^2, 3)
+    c <- round(cor(combined_data$aaac, combined_data$sm1st)^2, 3)
     #cor <- cor(aaac, sm1strrf, data = combined_data)^2
 
     ## sign check to avoid having plus followed by minus for negative coefficients
@@ -154,7 +151,7 @@ make_mcr <- function(analyte, population, linearity,qc, rrf_list = primary_analy
     ## after RRF adjustment
     adj_model <- lm(sm1strrf ~ aaac, data = combined_data)
     ## rounded coefficients for better output
-    adj_cf <- round(coef(model), 2)
+    adj_cf <- round(coef(adj_model), 2)
     adj_c <- round(cor(combined_data$aaac, combined_data$sm1strrf)^2, 3)
     #cor <- cor(aaac, sm1strrf, data = combined_data)^2
 
@@ -165,14 +162,18 @@ make_mcr <- function(analyte, population, linearity,qc, rrf_list = primary_analy
                  ifelse(sign(adj_cf[1])==1, " + ", " - "), abs(adj_cf[1]),
                  ",  R^2 = ", adj_c)
 
+    xmax <- max(combined_data$sm1st)
+    ymax <- max(combined_data$aaac)
+    
+    
     pdf(file = figure_pathname)
     par(mfrow = c(1,2))
-    plot(x = linearity$aaac,  y = linearity$sm1st, pch = 16, cex = 1.3, col = "black",
+    plot(x = linearity$aaac,  y = linearity$sm1st, xlim =c(0, xmax), ylim = c(0, ymax),  pch = 16, cex = 1.3, col = "black",
          main = eq,
          xlab = "AAAC",
          ylab = "SM1ST")
-    points(x = population$aaac,  y = population$sm1strrf, pch = 16, cex = 1.3, col = alpha("blue", 0.3))
-    points(x = qc$aaac,  y = qc$sm1strrf, pch = 16, cex = 1.3, col = "red")
+    points(x = population$aaac,  y = population$sm1st, pch = 16, cex = 1.3, col = alpha("blue", 0.3))
+    points(x = qc$aaac,  y = qc$sm1st, pch = 16, cex = 1.3, col = "red")
     abline(model, lty = 1)
     abline(a = 0, b = 1, col = "red", lty = 2)
     legend("topleft",
@@ -184,7 +185,7 @@ make_mcr <- function(analyte, population, linearity,qc, rrf_list = primary_analy
            lty = c(NA, NA,  NA, 1, 2),
            pch = c(16, 16, 16, NA, NA))
 
-    plot(x = linearity$aaac,  y = linearity$sm1strrf, pch = 16, cex = 1.3, col = "black",
+    plot(x = linearity$aaac,  y = linearity$sm1strrf, xlim =c(0, xmax), ylim = c(0, ymax), pch = 16, cex = 1.3, col = "black",
          main = adj_eq,
          xlab = "AAAC",
          ylab = "RRF adjusted SM1ST")
@@ -192,16 +193,7 @@ make_mcr <- function(analyte, population, linearity,qc, rrf_list = primary_analy
     points(x = qc$aaac,  y = qc$sm1strrf, pch = 16, cex = 1.3, col = "red")
     abline(adj_model, lty = 1)
     abline(a = 0, b = 1, col = "red", lty = 2)
-
-    legend("topleft",
-           legend = c("Population", "CDC Linearity", "QC material",
-                      "OLS regression",
-                      "Identity"),
-           bty = "n",
-           col = c(alpha("blue", 0.4), "black", "red", "black", "red"),
-           lty = c(NA, NA,  NA, 1, 2),
-           pch = c(16, 16, 16, NA, NA))
-
+    par(mfrow = c(1,1))
     dev.off()   
 }
 
