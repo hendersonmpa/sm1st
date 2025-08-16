@@ -47,7 +47,7 @@ make_plots <- function(analyte, population_data, linearity_data, rrf, xcor,  yco
 
     analyte_str <- str_remove(analyte, "[:-[:space:]]")
     figure_pathname <- paste0("../figures/", analyte_str, ".pdf")
-    title_str <- paste0(analyte_str," RRF: ", round(rrf, digits = 3))
+    title_str <- paste0(analyte_str," RRF: ", round(rrf, digits = 2))
     combined_data <- rbind(population_data, linearity_data)
     combined_data$sm1strrf <- combined_data$sm1st * rrf
     population_data$sm1strrf <- population_data$sm1st * rrf
@@ -92,7 +92,7 @@ make_plots <- function(analyte, population_data, linearity_data, rrf, xcor,  yco
 
 make_ts <- function(analyte, qcdata, moidata, rrf) {
     analyte_str <- str_remove(analyte, "[:-[:space:]]")
-    title_str <- paste0(analyte_str," RRF: ", round(rrf, digits = 3))
+    title_str <- paste0(analyte_str," RRF: ", round(rrf, digits = 2))
     figure_pathname <- paste0("../figures/", analyte_str, "_ts.pdf")
 
     qcdata$sm1strrf <- qcdata$sm1st * rrf
@@ -116,6 +116,16 @@ make_ts <- function(analyte, qcdata, moidata, rrf) {
 }
 
 
+make_eq_str <- function(model){
+    cf <- round(coef(model), 2)
+    r_sq <- round(summary(model)$adj.r.squared, 3)
+    eq_str<- paste0("y = ",
+                    ifelse(sign(cf[2])==1, "", " - "), abs(cf[2]), "x",
+                    ifelse(sign(cf[1])==1, " + ", " - "), abs(cf[1]),
+                    ",  R^2 = ", r_sq)
+    return(eq_str)
+}
+
 make_mcr <- function(analyte, population, linearity,qc, rrf_list = primary_analytes){
 ## TODO set plot axis zero and max value in combined data set
     rrf <- rrf_list[[analyte]]
@@ -134,64 +144,48 @@ make_mcr <- function(analyte, population, linearity,qc, rrf_list = primary_analy
     qc2 <- qc[c("sm1st","sm1strrf", "aaac")]
 
     combined_data <- rbind(population2, linearity2, qc2)
-    #combined_data$sm1strrf <- combined_data$sm1st * rrf
 
     model <- lm(sm1st ~ aaac, data = combined_data)
-    ## rounded coefficients for better output
-    cf <- round(coef(model), 2)
-    c <- round(cor(combined_data$aaac, combined_data$sm1st)^2, 3)
-    #cor <- cor(aaac, sm1strrf, data = combined_data)^2
-
-    ## sign check to avoid having plus followed by minus for negative coefficients
-    eq <- paste0("y = ",
-                 ifelse(sign(cf[2])==1, "", " - "), abs(cf[2]), "x",
-                 ifelse(sign(cf[1])==1, " + ", " - "), abs(cf[1]),
-                 ",  R^2 = ", c)
-
     ## after RRF adjustment
+    ## combined data 
     adj_model <- lm(sm1strrf ~ aaac, data = combined_data)
-    ## rounded coefficients for better output
-    adj_cf <- round(coef(adj_model), 2)
-    adj_c <- round(cor(combined_data$aaac, combined_data$sm1strrf)^2, 3)
-    #cor <- cor(aaac, sm1strrf, data = combined_data)^2
-
-    ## sign check to avoid having plus followed by minus for negative coefficients
-    adj_eq <- paste0(analyte," RRF = ", round(rrf,3),"\n",
-                 "y = ",
-                 ifelse(sign(adj_cf[2])==1, "", " - "), abs(adj_cf[2]), "x",
-                 ifelse(sign(adj_cf[1])==1, " + ", " - "), abs(adj_cf[1]),
-                 ",  R^2 = ", adj_c)
-
-    xmax <- max(combined_data$sm1st)
-    ymax <- max(combined_data$aaac)
+    ## population data only
+    adj_pop_model <- lm(sm1strrf ~ aaac, data = population)
+        
+    ymax <- max(combined_data$sm1strrf)
+    xmax <- max(combined_data$aaac)
     
     
     pdf(file = figure_pathname)
     par(mfrow = c(1,2))
-    plot(x = linearity$aaac,  y = linearity$sm1st, xlim =c(0, xmax), ylim = c(0, ymax),  pch = 16, cex = 1.3, col = "black",
-         main = eq,
+    plot(x = linearity$aaac,  y = linearity$sm1st, xlim =c(0, xmax), ylim = c(0, ymax),  pch = 16, cex = 1.3, col = alpha("darkgrey", 0.3),
+         main = paste0(analyte_str, "\n", make_eq_str(model)),
          xlab = "AAAC",
          ylab = "SM1ST")
-    points(x = population$aaac,  y = population$sm1st, pch = 16, cex = 1.3, col = alpha("blue", 0.3))
-    points(x = qc$aaac,  y = qc$sm1st, pch = 16, cex = 1.3, col = "red")
+    points(x = population$aaac,  y = population$sm1st, pch = 16, cex = 1.3, col = alpha("cornflowerblue", 0.3))
+    points(x = qc$aaac,  y = qc$sm1st, pch = 16, cex = 1.3, col = alpha("darkorchid", 0.3))
     abline(model, lty = 1)
     abline(a = 0, b = 1, col = "red", lty = 2)
     legend("topleft",
            legend = c("Population", "CDC Linearity", "QC material",
-                      "OLS regression",
-                      "Identity"),
+                      "OLS combined",
+                      "Identity",
+                      "OLS population"),
            bty = "n",
-           col = c(alpha("blue", 0.4), "black", "red", "black", "red"),
-           lty = c(NA, NA,  NA, 1, 2),
-           pch = c(16, 16, 16, NA, NA))
+           col = c("cornflowerblue", "darkgrey", "darkorchid", "black", "red","cornflowerblue"),
+           lty = c(NA, NA,  NA, 1, 2, 2),
+           pch = c(16, 16, 16, NA, NA, NA))
 
-    plot(x = linearity$aaac,  y = linearity$sm1strrf, xlim =c(0, xmax), ylim = c(0, ymax), pch = 16, cex = 1.3, col = "black",
-         main = adj_eq,
+    plot(x = linearity$aaac,  y = linearity$sm1strrf, xlim =c(0, xmax), ylim = c(0, ymax), pch = 16, cex = 1.3, col = alpha("darkgrey",0.3),
+         main = paste0("RRF = ", round(rrf, 2), "\n", make_eq_str(adj_model)),
          xlab = "AAAC",
-         ylab = "RRF adjusted SM1ST")
-    points(x = population$aaac,  y = population$sm1strrf, pch = 16, cex = 1.3, col = alpha("blue", 0.3))
-    points(x = qc$aaac,  y = qc$sm1strrf, pch = 16, cex = 1.3, col = "red")
+         ylab = "RRF adjusted SM1ST",
+         sub = make_eq_str(adj_pop_model),
+         col.sub = "cornflowerblue")
+    points(x = population$aaac,  y = population$sm1strrf, pch = 16, cex = 1.3, col = alpha("cornflowerblue", 0.3))
+    points(x = qc$aaac,  y = qc$sm1strrf, pch = 16, cex = 1.3, col = alpha("darkorchid",0.3))
     abline(adj_model, lty = 1)
+    abline(adj_pop_model, lty = 2, col = "cornflowerblue")
     abline(a = 0, b = 1, col = "red", lty = 2)
     par(mfrow = c(1,1))
     dev.off()   

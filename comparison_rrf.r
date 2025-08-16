@@ -72,7 +72,7 @@ make_ts("Met", metqc, metmoi, metrrf)
 
 ## Phe
 phepop <- get_data("Phe", 200, query_population)
-phelin <- get_data("Phe", 0, query_linearity)
+phelin <- get_data("Phe", 200, query_linearity)
 pherrf <- find_rrf(phepop, phelin)
 make_plots("Phe", phepop, phelin, pherrf, 50, 25 )
 pheqc <- get_viewdata("Phe", query_qc)
@@ -181,7 +181,7 @@ c8moi <- get_viewdata("C8", query_moi)
 make_ts("C8", c8qc, c8moi, c8rrf)
 
 
-C10
+## C10
 c10pop <- get_data("C10", 1, query_population)
 c10lin <- get_data("C10", 1, query_linearity)
 c10rrf <- find_rrf(c10pop, c10lin)
