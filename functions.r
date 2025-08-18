@@ -46,7 +46,7 @@ find_rrf <- function(dataframe1, dataframe2){
 make_plots <- function(analyte, population_data, linearity_data, rrf, xcor,  ycor){
 
     analyte_str <- str_remove(analyte, "[:-[:space:]]")
-    figure_pathname <- paste0("../figures/", analyte_str, ".pdf")
+    figure_pathname <- paste0("../figures/", instrument, "/", analyte_str, ".pdf")
     title_str <- paste0(analyte_str," RRF: ", round(rrf, digits = 2))
     combined_data <- rbind(population_data, linearity_data)
     combined_data$sm1strrf <- combined_data$sm1st * rrf
@@ -93,7 +93,7 @@ make_plots <- function(analyte, population_data, linearity_data, rrf, xcor,  yco
 make_ts <- function(analyte, qcdata, moidata, rrf) {
     analyte_str <- str_remove(analyte, "[:-[:space:]]")
     title_str <- paste0(analyte_str," RRF: ", round(rrf, digits = 2))
-    figure_pathname <- paste0("../figures/", analyte_str, "_ts.pdf")
+    figure_pathname <- paste0("../figures/", instrument, "/", analyte_str, "_ts.pdf")
 
     qcdata$sm1strrf <- qcdata$sm1st * rrf
     long_qcdata <- qcdata %>% pivot_longer(cols = c(sm1st, aaac, sm1strrf), names_to = "method", values_to = "mean")
@@ -130,7 +130,7 @@ make_mcr <- function(analyte, population, linearity,qc, rrf_list = primary_analy
 ## TODO set plot axis zero and max value in combined data set
     rrf <- rrf_list[[analyte]]
     analyte_str <- str_remove(analyte, "[:-[:space:]]")
-    figure_pathname <- paste0("../figures/", analyte_str, "_regression.pdf")
+    figure_pathname <- paste0("../figures/", instrument, "/", analyte_str, "_regression.pdf")
     title_str <- paste0(analyte_str," RRF: ", round(rrf, digits = 3))
 
 

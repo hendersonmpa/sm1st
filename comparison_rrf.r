@@ -3,8 +3,15 @@
 ### Results from patient samples, CDC linearity materials and qualitity control materials are used to span a range of values relevant to newborns screening
 
 library("tidyverse")
+
+instrument = "Bill" ## used to set figures subdirectory in "functions"
 source("./functions.r")
+
+## Bill queries
 source("./queries.r")
+## Larry and Joe queries 
+## TODO
+
 
 ## Amino acids
 # aa_primary <- c("Ala","Arg","Asa","Cit","Met","Phe","Tyr","SUAC","GUAC") Leu

@@ -1,7 +1,7 @@
 #+TITLE:   Bill SM1ST method comparison and RRF adjustment 
 #+AUTHOR:    Brittany Wong, Nate McIntosh, Matthew Henderson
 #+DATE:      \today
-#+INCLUDE: "./summary.org" :lines "4-"
+#+INCLUDE: ./Bill_summary.org :lines '4-'
 * Population and linearity based RRF
 ** Primary Amino Acids
 *** Ala
