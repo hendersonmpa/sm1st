@@ -1,0 +1,671 @@
+:PROPERTIES:
+- org-mode configuration
+#+TITLE:   Bill SUAC SM1ST method comparison and RRF adjustment 
+#+AUTHOR:    Emiliy Desmoreaux, Brittany Wong, Nate McIntosh, Matthew Henderson
+#+DATE:      \today
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:t ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:
+#+LINK_HOME:
+#+XSLT:
+#+DRAWERS: LOGBOOK CLOCK HIDDEN PROPERTIES
+#+STARTUP: overview
+#+Latex_class: koma-article
+#+LaTeX_header: \usepackage{textpos}
+#+LaTeX_HEADER: \usepackage{amsmath}
+#+LaTeX_HEADER: \usepackage{longtable}
+#+LaTeX_HEADER: \usepackage[automark, autooneside=false, headsepline]{scrlayer-scrpage}
+#+LaTeX_HEADER: \clearpairofpagestyles
+#+LaTeX_HEADER: \ihead{\leftmark}% section on the inner (oneside: right) side
+#+LaTeX_HEADER: \ohead{\rightmark}% subsection on the outer (oneside: left) side
+#+LaTeX_HEADER: \ofoot*{\pagemark}% the pagenumber on the outer side of the foot, also on plain pages
+#+LaTeX_HEADER: \pagestyle{scrheadings}
+
+:END:
+
+
+
+* Summary 
+
+- SUAC concentrations are at the low end of the analytical range in the newborn population
+  - Results from the SM1ST method are slightly higher in the population
+    due to background signal (Figure [[fig:popdens]] and Table
+    \ref{tab:summary})
+- The low concentration population data can not be used to access the SM1ST and AAAAC comparison 
+- The reported CDC mean values were selected as the source of truth
+  for this method and results were aligned with the CDC mean values
+  (Figure [[fig:suac_cdc]])
+- Linearity materials, calibrators,EQA material and one elevated
+  patient sample were used to assess comparability to the AAAC method
+  after adjustment to align with CDC means (Figure [[fig:comp]])
+- This linear regression model was used to transfer the current SUAC
+  screening threshold to SM1ST assay
+- A Monte Carlo simulation was used to estimate the number initial
+  screen positive result per week for a set of potential screening
+  cut-offs (Table \ref{tab:sim})
+  - An initial screening cut-off of 2.8 uM would result in approximately
+    one initial positive result per week with a maximum of 5.
+  - This is equivalent to a value of 6.5 uM  on the AAAC assay.
+- Short term follow-up data shows that all true positive tyrosinemia
+  type 1 cases had a SUAC \gt 20 uM this would be equivalent to a
+  result \gt 8.6 uM on the SM1ST assay
+  
+
+#+begin_src R :session *R* :results output :exports results :tangle yes
+  library("tidyverse")
+  library("readxl")
+  library("mcr")
+  library("stargazer")
+  source("./functions.r")
+  source("./queries.r")
+
+  ## CDC adjustment
+  ## SUAC
+  bill_suacpop <- get_data("SUAC", 10, query_population)
+  bill_suaclin <- get_data("SUAC", 20, query_linearity)
+  bill_suacqc <- get_viewdata("SUAC", query_qc)
+  bill_suacmoi <- get_viewdata("SUAC", query_moi)
+
+  larry_suacpop <- get_csv_data("SUAC", 10, "Larry", pop_csv_query)
+  larry_suaclin <- get_csv_data("SUAC", 20, "Larry", linearity_csv_query)
+  larry_suacqc <- get_csv_viewdata("SUAC", "Larry", qc_csv_query)
+  larry_suacmoi <- get_csv_viewdata("SUAC", "Larry", moi_csv_query)
+
+
+  joe_suacpop <- get_csv_data("SUAC", 10, "Joe", pop_csv_query)
+  joe_suaclin <- get_csv_data("SUAC", 20, "Joe", linearity_csv_query)
+  joe_suacqc <- get_csv_viewdata("SUAC", "Joe", qc_csv_query)
+  joe_suacmoi <- get_csv_viewdata("SUAC", "Joe", moi_csv_query)
+
+  cdc_data <- read.csv(file = "../data/SUAC_CDClin.csv")
+
+  suaccomp <- read_xlsx(path = "../data/SUAC_SM1ST vs AAAC and LCMS-SUAC methods_AUG2025.xlsx", sheet = 5)
+  volume <- read_xlsx(path = "../data/DashSnap_202207121456.xlsx", sheet = 1)
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Warning message:
+There is a result object still in use.
+The connection will be automatically released when it is closed
+Warning message:
+There is a result object still in use.
+The connection will be automatically released when it is closed
+Warning message:
+There is a result object still in use.
+The connection will be automatically released when it is closed
+Warning message:
+There is a result object still in use.
+The connection will be automatically released when it is closed
+Warning message:
+There is a result object still in use.
+The connection will be automatically released when it is closed
+Warning message:
+There is a result object still in use.
+The connection will be automatically released when it is closed
+Warning message:
+There is a result object still in use.
+The connection will be automatically released when it is closed
+Warning message:
+There is a result object still in use.
+The connection will be automatically released when it is closed
+Warning message:
+There is a result object still in use.
+The connection will be automatically released when it is closed
+Warning message:
+There is a result object still in use.
+The connection will be automatically released when it is closed
+Warning message:
+There is a result object still in use.
+The connection will be automatically released when it is closed
+Warning message:
+There is a result object still in use.
+The connection will be automatically released when it is closed
+-/                                                                              /                                                                              -                                                                              [1m[22mNew names:
+[36m•[39m `` -> `...6`
+#+end_example
+
+
+
+#+begin_src R :session *R* :results output graphics file :file ../figures/Bill/suac_dens.pdf :exports results :tangle yes
+  ggplot(bill_suacpop) +
+    geom_density(aes(x = aaac, colour = aaac_instrument)) +
+    geom_density(aes(x = sm1st)) +
+    coord_cartesian(xlim = c(0,2.5))
+#+end_src
+
+#+CAPTION[]: Bill SUAC distribution in population by assay and instrument 
+#+NAME: fig:popdens
+#+ATTR_LaTeX: :width 0.9\textwidth
+#+RESULTS:
+[[file:../figures/Bill/suac_dens.pdf]]
+
+
+#+begin_src R :session *R* :results output graphics file :file ../figures/Larry/suac_dens.pdf :exports results :tangle yes
+  ggplot(larry_suacpop) +
+    geom_density(aes(x = aaac, colour = aaac_instrument)) +
+    geom_density(aes(x = sm1st)) +
+    coord_cartesian(xlim = c(0,2.5))
+#+end_src
+
+#+CAPTION[]: Larry SUAC distribution in population by assay and instrument 
+#+NAME: fig:popdens
+#+ATTR_LaTeX: :width 0.9\textwidth
+#+RESULTS:
+[[file:../figures/Larry/suac_dens.pdf]]
+
+
+#+begin_src R :session *R* :results output graphics file :file ../figures/Joe/suac_dens.pdf :exports results :tangle yes
+  ggplot(joe_suacpop) +
+    geom_density(aes(x = aaac, colour = aaac_instrument)) +
+    geom_density(aes(x = sm1st)) +
+    coord_cartesian(xlim = c(0,2.5))
+#+end_src
+
+#+CAPTION[]: Joe SUAC distribution in population by assay and instrument 
+#+NAME: fig:popdens
+#+ATTR_LaTeX: :width 0.9\textwidth
+#+RESULTS:
+[[file:../figures/Joe/suac_dens.pdf]]
+
+
+
+
+* CDC alignment RRF
+
+#+begin_src R :session *R* :results output :exports results :tangle yes
+  ### CDC mean value
+  larry_rrf <- make_cdc(larry_suaclin, cdc_data, "Larry", "SUAC")
+  bill_rrf <- make_cdc(bill_suaclin, cdc_data, "Bill", "SUAC")
+  joe_rrf <- make_cdc(joe_suaclin, cdc_data, "Joe", "SUAC")
+
+  make_plots("SUAC_CDC", bill_suacpop, bill_suaclin, bill_rrf, 4, 10 , "Bill")
+  make_ts("SUAC_CDC", bill_suacqc, bill_suacmoi, bill_rrf, "Bill")
+  make_mcr("SUAC", bill_suacpop, bill_suaclin, bill_suacqc, c("SUAC" = bill_rrf), "Bill")
+
+  make_plots("SUAC_CDC", joe_suacpop, joe_suaclin, joe_rrf, 4, 10 , "Joe" )
+  make_ts("SUAC_CDC", joe_suacqc, joe_suacmoi, joe_rrf, "Joe")
+  make_mcr("SUAC", joe_suacpop, joe_suaclin, joe_suacqc, c("SUAC" = joe_rrf), "Joe")
+
+  make_plots("SUAC_CDC", larry_suacpop, larry_suaclin, larry_rrf, 4, 10, "Larry" )
+  make_ts("SUAC_CDC", larry_suacqc, larry_suacmoi, larry_rrf, "Larry")
+  make_mcr("SUAC", larry_suacpop, larry_suaclin, larry_suacqc, c("SUAC" = larry_rrf), "Larry")
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+[1m[22mSaving 7 x 7 in image
+[1m[22m`geom_smooth()` using formula = 'y ~ x'
+[1m[22m`geom_smooth()` using formula = 'y ~ x'
+[1m[22m`geom_smooth()` using formula = 'y ~ x'
+[1m[22mSaving 7 x 7 in image
+pdf 
+  2
+[1m[22mSaving 7 x 7 in image
+[1m[22m`geom_smooth()` using formula = 'y ~ x'
+[1m[22m`geom_smooth()` using formula = 'y ~ x'
+[1m[22m`geom_smooth()` using formula = 'y ~ x'
+[1m[22mSaving 7 x 7 in image
+pdf 
+  2
+[1m[22mSaving 7 x 7 in image
+[1m[22m`geom_smooth()` using formula = 'y ~ x'
+[1m[22m`geom_smooth()` using formula = 'y ~ x'
+[1m[22m`geom_smooth()` using formula = 'y ~ x'
+[1m[22mSaving 7 x 7 in image
+pdf 
+  2
+#+end_example
+
+** Bill
+
+#+CAPTION[]:Bill SUAC CDC linearity comparison 
+#+NAME: fig:suac_cdc
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Bill/SUAC_CDC_regression.pdf]]
+
+\clearpage
+
+#+CAPTION[]:Bill SUAC CDC and linearity based RRF adjustment
+#+NAME: fig:SUAC_CDC_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Bill/SUAC_CDC.pdf]]
+
+\clearpage
+
+#+CAPTION[]:Bill SUAC QC and MOI comparison with CDC based RRF adjustment
+#+NAME: fig:SUAC_CDC_qc
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Bill/SUAC_CDC_ts.pdf]]
+
+\clearpage
+
+
+#+begin_src R :session *R* :results output latex :exports results :tangle yes
+  bill_suacpop$sm1st_rrf <- bill_suacpop$sm1st * bill_rrf
+  stargazer(bill_suacpop, title = "Bill Summary statistics", label = "tab:bill_summary")
+#+end_src
+
+#+RESULTS:
+#+begin_export latex
+
+% Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
+% Date and time: Fri, Sep 05, 2025 - 05:33:24 PM
+\begin{table}[!htbp] \centering 
+  \caption{Bill Summary statistics} 
+  \label{tab:bill_summary} 
+\begin{tabular}{@{\extracolsep{5pt}}lccccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+Statistic & \multicolumn{1}{c}{N} & \multicolumn{1}{c}{Mean} & \multicolumn{1}{c}{St. Dev.} & \multicolumn{1}{c}{Min} & \multicolumn{1}{c}{Max} \\ 
+\hline \\[-1.8ex] 
+sm1st & 9,956 & 0.955 & 0.197 & 0.340 & 6.530 \\ 
+aaac & 9,956 & 0.628 & 0.347 & 0.000 & 4.420 \\ 
+sm1st\_rrf & 9,956 & 1.318 & 0.272 & 0.469 & 9.010 \\ 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table}
+#+end_export
+
+
+** Larry  
+#+CAPTION[]:Larry SUAC CDC linearity comparison 
+#+NAME: fig:suac_cdc
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Larry/SUAC_CDC_regression.pdf]]
+
+\clearpage
+
+#+CAPTION[]:Larry SUAC CDC and linearity based RRF adjustment
+#+NAME: fig:SUAC_CDC_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Larry/SUAC_CDC.pdf]]
+
+\clearpage
+
+#+CAPTION[]:Larry SUAC QC and MOI comparison with CDC based RRF adjustment
+#+NAME: fig:SUAC_CDC_qc
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Larry/SUAC_CDC_ts.pdf]]
+
+\clearpage
+
+
+#+begin_src R :session *R* :results output latex :exports results :tangle yes
+  larry_suacpop$sm1st_rrf <- larry_suacpop$sm1st * larry_rrf
+  stargazer(larry_suacpop, title = "Larry Summary statistics", label = "tab:larry_summary")
+#+end_src
+
+#+RESULTS:
+#+begin_export latex
+
+% Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
+% Date and time: Fri, Sep 05, 2025 - 05:33:20 PM
+\begin{table}[!htbp] \centering 
+  \caption{Larry Summary statistics} 
+  \label{tab:larry_summary} 
+\begin{tabular}{@{\extracolsep{5pt}}lccccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+Statistic & \multicolumn{1}{c}{N} & \multicolumn{1}{c}{Mean} & \multicolumn{1}{c}{St. Dev.} & \multicolumn{1}{c}{Min} & \multicolumn{1}{c}{Max} \\ 
+\hline \\[-1.8ex] 
+sm1st & 1,513 & 0.890 & 0.171 & 0.126 & 1.849 \\ 
+aaac & 1,513 & 0.511 & 0.221 & 0.000 & 2.020 \\ 
+sm1st\_rrf & 1,513 & 1.228 & 0.236 & 0.174 & 2.551 \\ 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table}
+#+end_export
+
+** Joe
+#+CAPTION[]:Joe SUAC CDC linearity comparison 
+#+NAME: fig:suac_cdc
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Joe/SUAC_CDC_regression.pdf]]
+
+\clearpage
+
+#+CAPTION[]:Joe SUAC CDC and linearity based RRF adjustment
+#+NAME: fig:SUAC_CDC_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Joe/SUAC_CDC.pdf]]
+
+\clearpage
+
+#+CAPTION[]:Joe SUAC QC and MOI comparison with CDC based RRF adjustment
+#+NAME: fig:SUAC_CDC_qc
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Joe/SUAC_CDC_ts.pdf]]
+
+\clearpage
+
+
+#+begin_src R :session *R* :results output latex :exports results :tangle yes
+  joe_suacpop$sm1st_rrf <- joe_suacpop$sm1st * joe_rrf
+  stargazer(joe_suacpop, title = "Joe Summary statistics", label = "tab:joe_summary")
+#+end_src
+
+#+RESULTS:
+#+begin_export latex
+
+% Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
+% Date and time: Fri, Sep 05, 2025 - 05:33:14 PM
+\begin{table}[!htbp] \centering 
+  \caption{Joe Summary statistics} 
+  \label{tab:joe_summary} 
+\begin{tabular}{@{\extracolsep{5pt}}lccccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+Statistic & \multicolumn{1}{c}{N} & \multicolumn{1}{c}{Mean} & \multicolumn{1}{c}{St. Dev.} & \multicolumn{1}{c}{Min} & \multicolumn{1}{c}{Max} \\ 
+\hline \\[-1.8ex] 
+sm1st & 1,171 & 1.065 & 0.207 & 0.581 & 2.422 \\ 
+aaac & 1,171 & 0.508 & 0.291 & 0.000 & 1.860 \\ 
+sm1st\_rrf & 1,171 & 1.469 & 0.285 & 0.802 & 3.342 \\ 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table}
+#+end_export
+
+
+
+* Comparison
+
+** Bill
+- What is the equivalent of AAAC 5 uM with SM1ST after CDC adjustment?
+- Linearity materials, calibrators,EQA material and one elevated patient sample were used to assess comparability.
+
+#+begin_src R :session *R* :results output graphics file :file ../figures/Bill/SUAC_mcr_linreg.pdf :exports results :tangle yes
+  suaccomp$Billcdc <- suaccomp$Bill * suac_mean_rrf
+
+  suactrim <- suaccomp %>%
+      filter(AAAC <= 20)
+
+  suac_comp.linreg <- mcreg(x = suactrim$AAAC, y =suactrim$Billcdc, error.ratio = 1, alpha = 0.05,
+			    mref.name = "AAAC", mtest.name = "SM1ST CDC adj", sample.names = NULL,
+			    method.reg = "LinReg", method.ci = "bootstrap",
+			    method.bootstrap.ci = "BCa",
+			    nsamples = 999, rng.seed = NULL, rng.kind = "Mersenne-Twister", iter.max = 30,
+			    threshold = 1e-06, na.rm = TRUE, NBins = 1e+06)
+
+  plot(suac_comp.linreg, x.lab = "AAAC", y.lab = "SM1ST CDC adj", main="Bill SUAC comparison")
+
+#+end_src
+
+
+#+CAPTION[]: Comparison between SM1ST and AAAC 
+#+NAME: fig:comp 
+#+ATTR_LaTeX: :width 0.9\textwidth
+#+RESULTS:
+[[file:../figures/Bill/SUAC_mcr_linreg.pdf]]
+
+
+#+begin_src R :session *R* :results output graphics file :file ../figures/Bill/SUAC_diff.pdf :exports results :tangle yes
+plotDifference( suac_comp.linreg, main= "Bill SUAC comparison")
+#+end_src
+
+#+CAPTION[]: Difference plot for SM1ST and AAAC 
+#+NAME: fig:diff 
+#+ATTR_LaTeX: :width 0.9\textwidth
+#+RESULTS:
+[[file:../figures/Bill/SUAC_diff.pdf]]
+
+
+#+begin_src R :session *R* :results output latex :exports results :tangle yes
+  intercept <- suac_comp.linreg@para[1,1] # intercept
+  slope <-  suac_comp.linreg@para[2,1] # slope
+
+  reg <- function(m,x,b){
+	y <- m * x + b
+	return(round(y, digits = 3))
+  }
+#+end_src
+
+- A result of src_R[:session *R* :results output :exports results :tangle yes]{reg(slope, 5, intercept)} uM with the SM1ST assay is
+  equivalent to a value at the screening threshold (5 uM) with the AAAC method.
+
+
+\clearpage
+
+** Larry
+- What is the equivalent of AAAC 5 uM with SM1ST after CDC adjustment?
+- Linearity materials, calibrators,EQA material and one elevated patient sample were used to assess comparability.
+
+#+begin_src R :session *R* :results output graphics file :file ../figures/Larry/SUAC_mcr_linreg.pdf :exports results :tangle yes
+  ## suaccomp$Larrycdc <- suaccomp$Larry * suac_mean_rrf
+
+  ## suactrim <- suaccomp %>%
+  ##     filter(AAAC <= 20)
+
+  suac_comp.linreg <- mcreg(x = suactrim$AAAC, y =suactrim$Larrycdc, error.ratio = 1, alpha = 0.05,
+			    mref.name = "AAAC", mtest.name = "SM1ST CDC adj", sample.names = NULL,
+			    method.reg = "LinReg", method.ci = "bootstrap",
+			    method.bootstrap.ci = "BCa",
+			    nsamples = 999, rng.seed = NULL, rng.kind = "Mersenne-Twister", iter.max = 30,
+			    threshold = 1e-06, na.rm = TRUE, NBins = 1e+06)
+
+  plot(suac_comp.linreg, x.lab = "AAAC", y.lab = "SM1ST CDC adj", main="Larry SUAC comparison")
+
+#+end_src
+
+
+#+CAPTION[]: Comparison between SM1ST and AAAC 
+#+NAME: fig:comp 
+#+ATTR_LaTeX: :width 0.9\textwidth
+#+RESULTS:
+[[file:../figures/Larry/SUAC_mcr_linreg.pdf]]
+
+
+#+begin_src R :session *R* :results output graphics file :file ../figures/Larry/SUAC_diff.pdf :exports results :tangle yes
+plotDifference( suac_comp.linreg, main= "Larry SUAC comparison")
+#+end_src
+
+#+CAPTION[]: Difference plot for SM1ST and AAAC 
+#+NAME: fig:diff 
+#+ATTR_LaTeX: :width 0.9\textwidth
+#+RESULTS:
+[[file:../figures/Larry/SUAC_diff.pdf]]
+
+
+#+begin_src R :session *R* :results output latex :exports results :tangle yes
+  intercept <- suac_comp.linreg@para[1,1] # intercept
+  slope <-  suac_comp.linreg@para[2,1] # slope
+
+  reg <- function(m,x,b){
+	y <- m * x + b
+	return(round(y, digits = 3))
+  }
+#+end_src
+
+- A result of src_R[:session *R* :results output :exports results :tangle yes]{reg(slope, 5, intercept)} uM with the SM1ST assay is
+  equivalent to a value at the screening threshold (5 uM) with the AAAC method.
+
+
+\clearpage
+
+** Joe
+- What is the equivalent of AAAC 5 uM with SM1ST after CDC adjustment?
+- Linearity materials, calibrators,EQA material and one elevated patient sample were used to assess comparability.
+
+#+begin_src R :session *R* :results output graphics file :file ../figures/Joe/SUAC_mcr_linreg.pdf :exports results :tangle yes
+  suaccomp$Joecdc <- suaccomp$Joe * suac_mean_rrf
+
+  suactrim <- suaccomp %>%
+      filter(AAAC <= 20)
+
+  suac_comp.linreg <- mcreg(x = suactrim$AAAC, y =suactrim$Joecdc, error.ratio = 1, alpha = 0.05,
+			    mref.name = "AAAC", mtest.name = "SM1ST CDC adj", sample.names = NULL,
+			    method.reg = "LinReg", method.ci = "bootstrap",
+			    method.bootstrap.ci = "BCa",
+			    nsamples = 999, rng.seed = NULL, rng.kind = "Mersenne-Twister", iter.max = 30,
+			    threshold = 1e-06, na.rm = TRUE, NBins = 1e+06)
+
+  plot(suac_comp.linreg, x.lab = "AAAC", y.lab = "SM1ST CDC adj", main="Joe SUAC comparison")
+
+#+end_src
+
+
+#+CAPTION[]: Comparison between SM1ST and AAAC 
+#+NAME: fig:comp 
+#+ATTR_LaTeX: :width 0.9\textwidth
+#+RESULTS:
+[[file:../figures/Joe/SUAC_mcr_linreg.pdf]]
+
+
+#+begin_src R :session *R* :results output graphics file :file ../figures/Joe/SUAC_diff.pdf :exports results :tangle yes
+plotDifference( suac_comp.linreg, main= "Joe SUAC comparison")
+#+end_src
+
+#+CAPTION[]: Difference plot for SM1ST and AAAC 
+#+NAME: fig:diff 
+#+ATTR_LaTeX: :width 0.9\textwidth
+#+RESULTS:
+[[file:../figures/Joe/SUAC_diff.pdf]]
+
+
+#+begin_src R :session *R* :results output latex :exports results :tangle yes
+  intercept <- suac_comp.linreg@para[1,1] # intercept
+  slope <-  suac_comp.linreg@para[2,1] # slope
+
+  reg <- function(m,x,b){
+	y <- m * x + b
+	return(round(y, digits = 3))
+  }
+#+end_src
+
+- A result of src_R[:session *R* :results output :exports results :tangle yes]{reg(slope, 5, intercept)} uM with the SM1ST assay is
+  equivalent to a value at the screening threshold (5 uM) with the AAAC method.
+
+
+\clearpage
+
+* Simulation
+
+- The intention of this simulation is to determine the impact of potential first tier SUAC thresholds
+- Inputs:
+  - Weekly NBS sample volume: Sampled from a normal distribution with mean 2840
+    and SD 297
+    - Based on weekly volumes 2020-01-01 to 2021-12-31
+  - SUAC screening thresholds ranging from 2.5 (equivalent to 5 with AAAC) to 5 (equivalent to 10 with AAAC) 
+- Method:
+  - The SUAC  population data (n ~ 12,000) was sampled 1000 times
+    - The size of the weekly population sample was derived from a
+      normal distribution with mean 2840 and SD 297
+  - The SUAC threshold applied was varied from 2.5 to 3.0 in increments
+    of 0.1 for each population sample
+    - The SUAC logic using the current threshold was applied to each
+      result in the population sample.
+  - The number of results \ge the threshold for each data sample was recorded
+
+
+#+begin_src R :session *R* :results output :exports results :tangle yes
+    ###### weekly volumes
+    ## volume$date_time  <- ymd_hms(volume$DateTime)
+    ##   volume$nbs_entered_today<- as.numeric(volume$NBSEnteredToday)
+
+    ##   volume_week <- volume %>%
+    ## 	  group_by(week = date(floor_date(date_time, unit = "week"))) %>%
+    ## 	  summarise(sum = sum(nbs_entered_today)) %>%
+    ## 	  filter(week >= "2020-01-01" & week <= "2021-12-31") ## Two years
+
+    ##   ggplot(volume_week) +
+    ##     geom_histogram(aes(x=sum), binwidth = 100)
+
+    start <- 2.5
+    end <- 5
+    mean_volume= 2840
+    sd_volume= 297
+
+
+  merge_suacpop <- rbind(bill_suacpop, larry_suacpop, joe_suacpop)
+  
+  suac_initial_logic <- function(data, threshold) {
+					      #positives <- filter(data, GUAC >= threshold)
+      positive <- length(data[data >= threshold])
+      return(positive)
+    }  
+					    #  guac_initial_logic(nbs$GUAC, 2.7)
+    tyr1initial <- data.frame(sample = double(), volume = double(), threshold= double(),
+			    initial_positive = double(), stringsAsFactors = FALSE)
+    c <- 0
+    for (s in 1:1000) {
+      v <- rnorm(n=1, mean = mean_volume, sd = sd_volume) ## sample volume$date
+      data_sample <- sample(merge_suacpop$sm1st_rrf, v, replace = FALSE)
+      for (t in seq(from = start, to = end, by = 0.1)) {
+	c <- c + 1
+	p <- suac_initial_logic(data=data_sample, threshold=t)
+	tyr1initial[c,] <- list(sample = s, volume=v, threshold = t, initial_positive =p)
+      }
+    }
+
+#+end_src
+
+#+RESULTS:
+
+
+#+begin_src R :session *R* :results output latex :exports results :tangle yes
+  tyr1initial %>%
+    group_by(threshold) %>%
+    summarise( min = min(initial_positive),
+	      p025 = quantile(initial_positive,probs = c(0.025), type = 8, na.rm = TRUE),
+	      median = median(initial_positive, na.rm = TRUE),
+	      p975 = quantile(initial_positive,probs = c(0.975), type = 8, na.rm = TRUE),
+	      max = max(initial_positive)) %>%
+    as.data.frame() %>%
+					# write.csv(,file = "../data/tyr1_simulation.csv") 
+    stargazer(summary = FALSE, rownames = FALSE,
+	      title="Output of Tyr1 initial logic simulation for weekly volumes" ,
+		label = "tab:sim")
+
+#+end_src
+
+#+RESULTS:
+#+begin_export latex
+
+% Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
+% Date and time: Fri, Sep 05, 2025 - 05:34:57 PM
+\begin{table}[!htbp] \centering 
+  \caption{Output of Tyr1 initial logic simulation for weekly volumes} 
+  \label{tab:sim} 
+\begin{tabular}{@{\extracolsep{5pt}} cccccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+threshold & min & p025 & median & p975 & max \\ 
+\hline \\[-1.8ex] 
+$2.500$ & $0$ & $2$ & $6$ & $11$ & $14$ \\ 
+$2.600$ & $0$ & $0.342$ & $4$ & $7$ & $10$ \\ 
+$2.700$ & $0$ & $0$ & $3$ & $6$ & $9$ \\ 
+$2.800$ & $0$ & $0$ & $2$ & $5$ & $7$ \\ 
+$2.900$ & $0$ & $0$ & $2$ & $4$ & $6$ \\ 
+$3$ & $0$ & $0$ & $1$ & $4$ & $5$ \\ 
+$3.100$ & $0$ & $0$ & $1$ & $3$ & $4$ \\ 
+$3.200$ & $0$ & $0$ & $1$ & $3$ & $4$ \\ 
+$3.300$ & $0$ & $0$ & $1$ & $2$ & $3$ \\ 
+$3.400$ & $0$ & $0$ & $0$ & $2$ & $2$ \\ 
+$3.500$ & $0$ & $0$ & $0$ & $1$ & $1$ \\ 
+$3.600$ & $0$ & $0$ & $0$ & $1$ & $1$ \\ 
+$3.700$ & $0$ & $0$ & $0$ & $1$ & $1$ \\ 
+$3.800$ & $0$ & $0$ & $0$ & $1$ & $1$ \\ 
+$3.900$ & $0$ & $0$ & $0$ & $1$ & $1$ \\ 
+$4$ & $0$ & $0$ & $0$ & $1$ & $1$ \\ 
+$4.100$ & $0$ & $0$ & $0$ & $1$ & $1$ \\ 
+$4.200$ & $0$ & $0$ & $0$ & $1$ & $1$ \\ 
+$4.300$ & $0$ & $0$ & $0$ & $1$ & $1$ \\ 
+$4.400$ & $0$ & $0$ & $0$ & $1$ & $1$ \\ 
+$4.500$ & $0$ & $0$ & $0$ & $1$ & $1$ \\ 
+$4.600$ & $0$ & $0$ & $0$ & $1$ & $1$ \\ 
+$4.700$ & $0$ & $0$ & $0$ & $1$ & $1$ \\ 
+$4.800$ & $0$ & $0$ & $0$ & $1$ & $1$ \\ 
+$4.900$ & $0$ & $0$ & $0$ & $1$ & $1$ \\ 
+$5$ & $0$ & $0$ & $0$ & $1$ & $1$ \\ 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table}
+#+end_export

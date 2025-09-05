@@ -26,9 +26,29 @@ get_data <- function(analyte, upper_limit, query){
     data <- with_con( query , params)
 }
 
+make_csv_query <- function(analyte, query) {
+    csv_query <- gsub("ANALYTE", analyte, query)
+    return(csv_query)
+}
+
+get_csv_data <- function(analyte, upper_limit, instrument, query){
+    csv_query <- make_csv_query(analyte, query)
+    #print(csv_query)
+    params <- list(analyte, upper_limit, upper_limit, instrument)
+    data <- with_con(csv_query, params)
+}
+
+
 get_viewdata <- function(analyte, query){
     params <- list(analyte, analyte)
     data <- with_con(query , params)
+}
+
+
+get_csv_viewdata <- function(analyte, instrument, query){
+    csv_query <- make_csv_query(analyte, query)
+    params <- list(analyte, instrument)
+    data <- with_con(csv_query , params)
 }
 
 
@@ -43,7 +63,7 @@ find_rrf <- function(dataframe1, dataframe2){
     return(rrf)
 }
 
-make_plots <- function(analyte, population_data, linearity_data, rrf, xcor,  ycor){
+make_plots <- function(analyte, population_data, linearity_data, rrf, xcor,  ycor, instrument = instrument_name){
 
     analyte_str <- str_remove(analyte, "[:-[:space:]]")
     figure_pathname <- paste0("../figures/", instrument, "/", analyte_str, ".pdf")
@@ -90,7 +110,7 @@ make_plots <- function(analyte, population_data, linearity_data, rrf, xcor,  yco
     ggsave(filename = figure_pathname, plot = p_anot)
 }
 
-make_ts <- function(analyte, qcdata, moidata, rrf) {
+make_ts <- function(analyte, qcdata, moidata, rrf, instrument = instrument_name) {
     analyte_str <- str_remove(analyte, "[:-[:space:]]")
     title_str <- paste0(analyte_str," RRF: ", round(rrf, digits = 2))
     figure_pathname <- paste0("../figures/", instrument, "/", analyte_str, "_ts.pdf")
@@ -116,6 +136,82 @@ make_ts <- function(analyte, qcdata, moidata, rrf) {
 }
 
 
+make_cdc <- function(linearity_data, cdc_data, instrument_name, analyte_str){
+    cdc_merge <- merge(linearity_data, cdc_data, by= "sample")
+    figure_pathname <- paste0("../figures/", instrument_name, "/", analyte_str, "_CDC_regression.pdf")
+    mean_model <- lm(sm1st ~ mean  , data = cdc_merge)
+    mean_slope = suac_mean_model$coefficients[['mean']]
+    mean_rrf = 1/suac_mean_slope
+    cdc_merge$sm1st_mean <- cdc_merge$sm1st* mean_rrf
+
+    meanadj_model <- lm(sm1st_mean~ mean  , data = cdc_merge)
+    mean_cf <- round(coef(mean_model), 2)
+    mean_c <- round(cor(cdc_merge$sm1st, cdc_merge$sm1st)^2, 3)
+    ## sign check to avoid having plus followed by minus for negative coefficients
+    mean_eq <- paste0("RRF = ", round(suac_mean_rrf,3),"\n",
+                      "y = ",
+                      ifelse(sign(mean_cf[2])==1, "", " - "), abs(mean_cf[2]), "x",
+                      ifelse(sign(mean_cf[1])==1, " + ", " - "), abs(mean_cf[1]),
+                      ",  R^2 = ", mean_c)
+  ### CDC spike value
+  spike_model <- lm(sm1st ~ spike  , data = cdc_merge)
+  spike_slope = spike_model$coefficients[['spike']]
+  spike_rrf = 1/spike_slope
+
+  spike_cf <- round(coef(suac_spike_model), 2)
+  spike_c <- round(cor(suaccdc_merge$sm1st, suaccdc_merge$sm1st)^2, 3)
+  ## sign check to avoid having plus followed by minus for negative coefficients
+  spike_eq <- paste0("RRF = ", round(spike_rrf,3),"\n",
+	       "y = ",
+	       ifelse(sign(spike_cf[2])==1, "", " - "), abs(spike_cf[2]), "x",
+	       ifelse(sign(spike_cf[1])==1, " + ", " - "), abs(spike_cf[1]),
+	       ",  R^2 = ", spike_c)
+
+  cdc_merge$sm1st_spike <- cdc_merge$sm1st* spike_rrf
+
+  pdf(file = figure_pathname)
+  par(mfrow=c(2,2))
+
+  plot(x = cdc_merge$mean,  y = cdc_merge$sm1st, pch = 16, cex = 1.3, col = alpha("blue", 0.3),
+       main = mean_eq,
+       xlab = "CDC mean value",
+       ylab = "SM1ST")
+  abline(mean_model, model, lty = 1)
+  abline(a = 0, b = 1, col = "red", lty = 2)
+  legend("topleft",
+	 legend = c("CDC linearity materials",
+		    "OLS regression",
+		    "Identity"),
+	 bty = "n",
+	 col = c(alpha("blue", 0.4),  "black", "red"),
+	 lty = c(NA, 1, 2),
+	 pch = c(16, NA, NA))
+
+  plot(x = cdc_merge$spike,  y = cdc_merge$sm1st, pch = 16, cex = 1.3, col = alpha("blue", 0.3),
+       main = spike_eq,
+       xlab = "CDC spike value",
+       ylab = "SM1ST")
+  abline(spike_model, model, lty = 1)
+  abline(a = 0, b = 1, col = "red", lty = 2)
+
+  plot(x = cdc_merge$mean,  y = cdc_merge$sm1st_mean, pch = 16, cex = 1.3, col = alpha("blue", 0.3),
+       main = "Mean RRF applied",
+       xlab = "CDC mean value",
+       ylab = "SM1ST mean RRF")
+  abline(a = 0, b = 1, col = "red", lty = 2)
+
+  plot(x = cdc_merge$spike,  y = cdc_merge$sm1st_spike, pch = 16, cex = 1.3, col = alpha("blue", 0.3),
+       main = "Spike RRF applied",
+       xlab = "CDC spike value",
+       ylab = "SM1ST spike RRF")
+  abline(a = 0, b = 1, col = "red", lty = 2)
+    par(mfrow=c(1,1))
+    dev.off()
+
+    return(mean_rrf)
+    
+}
+
 make_eq_str <- function(model){
     cf <- round(coef(model), 2)
     r_sq <- round(summary(model)$adj.r.squared, 3)
@@ -126,7 +222,7 @@ make_eq_str <- function(model){
     return(eq_str)
 }
 
-make_mcr <- function(analyte, population, linearity,qc, rrf_list = primary_analytes){
+make_mcr <- function(analyte, population, linearity,qc, rrf_list = primary_analytes, instrument = instrument_name){
 ## TODO set plot axis zero and max value in combined data set
     rrf <- rrf_list[[analyte]]
     analyte_str <- str_remove(analyte, "[:-[:space:]]")

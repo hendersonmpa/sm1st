@@ -20,7 +20,7 @@ declare -a cdc=("SUAC")
 
 echo -n " Enter the instrument name and press [ENTER]:  "
 read instrument
-o
+
 
 # Sanity Checks
 
@@ -28,8 +28,6 @@ if [ -z "$BASH" ] ; then
     printf "$SCRIPT:$LINENO: please run this script with the BASH shell\n" >&2
     exit 192
 fi
-
-
 
 
 # Clear the file if it exists, or create it
@@ -49,7 +47,7 @@ cat <<EOF >> "$org_file_name"
 #+DATE:      \today
 EOF
 
-echo "#+INCLUDE: ./${instrument}_summary.org :lines '4-'"  >> "$org_file_name"
+echo "#+INCLUDE: ./${instrument}_summary.org"  >> "$org_file_name"
 
 echo "* Population and linearity based RRF" >> "$org_file_name"
 

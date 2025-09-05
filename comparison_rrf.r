@@ -4,14 +4,13 @@
 
 library("tidyverse")
 
-instrument = "Bill" ## used to set figures subdirectory in "functions"
+instrument_name <- "Bill" ## used to set figures subdirectory in "functions"
 source("./functions.r")
 
 ## Bill queries
 source("./queries.r")
 ## Larry and Joe queries 
 ## TODO
-
 
 ## Amino acids
 # aa_primary <- c("Ala","Arg","Asa","Cit","Met","Phe","Tyr","SUAC","GUAC") Leu
@@ -158,7 +157,7 @@ make_ts("C5", c5qc, c5moi, c5rrf)
 
 
 ## C5DC
-params = list('C5DC_C6OH', 'C5DC', 1, 1)
+params = list('C5DC_C6OH', 'C5DC', 0.5, 0.5)
 c5dcpop <- with_con(query_population , params)
 c5dclin <- with_con(query_linearity , params)
 c5dcrrf <- find_rrf(c5dcpop, c5dclin)

@@ -1,9 +1,9 @@
 * Summary 
 
-- This analysis uses data from sm1st and aaac tables in the sm database
-  - this data was pulled from the AIH
-- Results from SM1ST run on Bill was compared to AAAC run on Larry, Joe and Jenna Jr
-- Patient samples, CDC linearity materials and qualitity control
+- This analysis uses data from csv and aaac tables in the sm database
+  - this data was pulled from instrument csv file exports 
+- Results from SM1ST run on Joe was compared to AAAC run on Larry, Joe and Jenna Jr
+- Patient samples, CDC linearity materials and quality control
   materials are used to span a range of values relevant to newborns
   screening
 
