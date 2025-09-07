@@ -28,7 +28,7 @@ and sm1.plate not in ('SM1ST2025010079', 'SM1ST2025010080', 'SM1ST2025010082', '
 ## and sm1.plate not in ('SM1ST2025010079', 'SM1ST2025010080', 'SM1ST2025010082', 'SM1ST2025010084', 'SM1ST2025010085', 'SM1ST2025010105', 'SM1ST2025010043', 'SM1ST2025010044', 'SM1ST2025010258', 'SM1ST2025010259', 'SM1ST2025010260')"
 
 
-query_linearity <- "select date(sm1.createdate) as date, sm1.instrument as sm1_instrument, aaac.instrument AS aaac_instrument, regexp_substr(aaac.sample, 'CDClin[[:digit:]]+') as sample,  
+query_linearity <- "select distinct date(sm1.createdate) as date, sm1.instrument as sm1_instrument, aaac.instrument AS aaac_instrument, regexp_substr(aaac.sample, 'CDClin[[:digit:]]+') as sample,  
 sm1.result as sm1st, aaac.result as aaac
 from sm1st as sm1
 join aaac on regexp_substr(sm1.sample, 'CDClin[[:digit:]]+') = regexp_substr(aaac.sample, 'CDClin[[:digit:]]+') 
@@ -98,7 +98,7 @@ and csv.instrument = ?"
 
 #with_con(make_csv_query("Ala", pop_csv_query), params = c("Ala",1000,1000, "Joe"))
 
-linearity_csv_query <- "select date(csv.createdate) as date, csv.instrument as sm1_instrument, aaac.instrument AS aaac_instrument, regexp_substr(aaac.sample, 'CDClin[[:digit:]]+') as sample, csv.ANALYTE as sm1st, aaac.result as aaac
+linearity_csv_query <- "select distinct date(csv.createdate) as date, csv.instrument as sm1_instrument, aaac.instrument AS aaac_instrument, regexp_substr(aaac.sample, 'CDClin[[:digit:]]+') as sample, csv.ANALYTE as sm1st, aaac.result as aaac
 from csv
 join aaac on regexp_substr(csv.sample, 'CDClin[[:digit:]]+') = regexp_substr(aaac.sample, 'CDClin[[:digit:]]+') 
 and week(csv.createdate) = week(aaac.createdate)

@@ -140,15 +140,15 @@ make_cdc <- function(linearity_data, cdc_data, instrument_name, analyte_str){
     cdc_merge <- merge(linearity_data, cdc_data, by= "sample")
     figure_pathname <- paste0("../figures/", instrument_name, "/", analyte_str, "_CDC_regression.pdf")
     mean_model <- lm(sm1st ~ mean  , data = cdc_merge)
-    mean_slope = suac_mean_model$coefficients[['mean']]
-    mean_rrf = 1/suac_mean_slope
+    mean_slope = mean_model$coefficients[['mean']]
+    mean_rrf = 1/mean_slope
     cdc_merge$sm1st_mean <- cdc_merge$sm1st* mean_rrf
 
-    meanadj_model <- lm(sm1st_mean~ mean  , data = cdc_merge)
+    #mean_adj_model <- lm(sm1st_mean~ mean  , data = cdc_merge)
     mean_cf <- round(coef(mean_model), 2)
     mean_c <- round(cor(cdc_merge$sm1st, cdc_merge$sm1st)^2, 3)
     ## sign check to avoid having plus followed by minus for negative coefficients
-    mean_eq <- paste0("RRF = ", round(suac_mean_rrf,3),"\n",
+    mean_eq <- paste0("RRF = ", round(mean_rrf,3),"\n",
                       "y = ",
                       ifelse(sign(mean_cf[2])==1, "", " - "), abs(mean_cf[2]), "x",
                       ifelse(sign(mean_cf[1])==1, " + ", " - "), abs(mean_cf[1]),
@@ -157,9 +157,10 @@ make_cdc <- function(linearity_data, cdc_data, instrument_name, analyte_str){
   spike_model <- lm(sm1st ~ spike  , data = cdc_merge)
   spike_slope = spike_model$coefficients[['spike']]
   spike_rrf = 1/spike_slope
+  cdc_merge$sm1st_spike <- cdc_merge$sm1st* spike_rrf
 
-  spike_cf <- round(coef(suac_spike_model), 2)
-  spike_c <- round(cor(suaccdc_merge$sm1st, suaccdc_merge$sm1st)^2, 3)
+    spike_cf <- round(coef(spike_model), 2)
+  spike_c <- round(cor(cdc_merge$sm1st, cdc_merge$sm1st)^2, 3)
   ## sign check to avoid having plus followed by minus for negative coefficients
   spike_eq <- paste0("RRF = ", round(spike_rrf,3),"\n",
 	       "y = ",
@@ -167,7 +168,7 @@ make_cdc <- function(linearity_data, cdc_data, instrument_name, analyte_str){
 	       ifelse(sign(spike_cf[1])==1, " + ", " - "), abs(spike_cf[1]),
 	       ",  R^2 = ", spike_c)
 
-  cdc_merge$sm1st_spike <- cdc_merge$sm1st* spike_rrf
+
 
   pdf(file = figure_pathname)
   par(mfrow=c(2,2))

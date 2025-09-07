@@ -4,7 +4,7 @@
 
 library("tidyverse")
 
-instrument_name <- "Larry" ## used to set figures subdirectory in "functions"
+instrument_name <- "Joe" ## used to set figures subdirectory in "functions"
 #instrument_name <- "Joe" ## used to set figures subdirectory in "functions"
 source("./functions.r")
 

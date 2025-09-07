@@ -69,17 +69,24 @@
   ## SUAC
   bill_suacpop <- get_data("SUAC", 10, query_population)
   bill_suaclin <- get_data("SUAC", 20, query_linearity)
+  bill_suaclin_distinct <- bill_suaclin %>%
+      distinct(date, sample, sm1st, .keep_all = TRUE) 
+
   bill_suacqc <- get_viewdata("SUAC", query_qc)
   bill_suacmoi <- get_viewdata("SUAC", query_moi)
 
   larry_suacpop <- get_csv_data("SUAC", 10, "Larry", pop_csv_query)
   larry_suaclin <- get_csv_data("SUAC", 20, "Larry", linearity_csv_query)
+  larry_suaclin_distinct <- larry_suaclin %>%
+      distinct(date, sample, sm1st, .keep_all = TRUE) 
   larry_suacqc <- get_csv_viewdata("SUAC", "Larry", qc_csv_query)
   larry_suacmoi <- get_csv_viewdata("SUAC", "Larry", moi_csv_query)
 
 
   joe_suacpop <- get_csv_data("SUAC", 10, "Joe", pop_csv_query)
   joe_suaclin <- get_csv_data("SUAC", 20, "Joe", linearity_csv_query)
+  joe_suaclin_distinct <- joe_suaclin %>%
+      distinct(date, sample, sm1st, .keep_all = TRUE) 
   joe_suacqc <- get_csv_viewdata("SUAC", "Joe", qc_csv_query)
   joe_suacmoi <- get_csv_viewdata("SUAC", "Joe", moi_csv_query)
 
@@ -92,6 +99,21 @@
 
 #+RESULTS:
 #+begin_example
+── [1mAttaching core tidyverse packages[22m ──────────────────────────────────────────────── tidyverse 2.0.0 ──
+[32m✔[39m [34mdplyr    [39m 1.1.0     [32m✔[39m [34mreadr    [39m 2.1.4
+[32m✔[39m [34mforcats  [39m 1.0.0     [32m✔[39m [34mstringr  [39m 1.5.0
+[32m✔[39m [34mggplot2  [39m 3.4.1     [32m✔[39m [34mtibble   [39m 3.1.8
+[32m✔[39m [34mlubridate[39m 1.9.2     [32m✔[39m [34mtidyr    [39m 1.3.0
+[32m✔[39m [34mpurrr    [39m 1.0.1     
+── [1mConflicts[22m ────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+[31m✖[39m [34mdplyr[39m::[32mfilter()[39m masks [34mstats[39m::filter()
+[31m✖[39m [34mdplyr[39m::[32mlag()[39m    masks [34mstats[39m::lag()
+[36mℹ[39m Use the conflicted package ([3m[34m<http://conflicted.r-lib.org/>[39m[23m) to force all conflicts to become errors
+
+Please cite as: 
+
+ Hlavac, Marek (2022). stargazer: Well-Formatted Regression and Summary Statistics Tables.
+ R package version 5.2.3. https://CRAN.R-project.org/package=stargazer
 Warning message:
 There is a result object still in use.
 The connection will be automatically released when it is closed
@@ -128,8 +150,6 @@ The connection will be automatically released when it is closed
 Warning message:
 There is a result object still in use.
 The connection will be automatically released when it is closed
--/                                                                              /                                                                              -                                                                              [1m[22mNew names:
-[36m•[39m `` -> `...6`
 #+end_example
 
 
@@ -182,9 +202,9 @@ The connection will be automatically released when it is closed
 
 #+begin_src R :session *R* :results output :exports results :tangle yes
   ### CDC mean value
-  larry_rrf <- make_cdc(larry_suaclin, cdc_data, "Larry", "SUAC")
-  bill_rrf <- make_cdc(bill_suaclin, cdc_data, "Bill", "SUAC")
-  joe_rrf <- make_cdc(joe_suaclin, cdc_data, "Joe", "SUAC")
+  larry_rrf <- make_cdc(larry_suaclin_distinct, cdc_data, "Larry", "SUAC")
+  bill_rrf <- make_cdc(bill_suaclin_distinct, cdc_data, "Bill", "SUAC")
+  joe_rrf <- make_cdc(joe_suaclin_distinct, cdc_data, "Joe", "SUAC")
 
   make_plots("SUAC_CDC", bill_suacpop, bill_suaclin, bill_rrf, 4, 10 , "Bill")
   make_ts("SUAC_CDC", bill_suacqc, bill_suacmoi, bill_rrf, "Bill")
@@ -383,7 +403,7 @@ sm1st\_rrf & 1,171 & 1.469 & 0.285 & 0.802 & 3.342 \\
 - Linearity materials, calibrators,EQA material and one elevated patient sample were used to assess comparability.
 
 #+begin_src R :session *R* :results output graphics file :file ../figures/Bill/SUAC_mcr_linreg.pdf :exports results :tangle yes
-  suaccomp$Billcdc <- suaccomp$Bill * suac_mean_rrf
+  suaccomp$Billcdc <- suaccomp$Bill * bill_rrf
 
   suactrim <- suaccomp %>%
       filter(AAAC <= 20)
@@ -439,10 +459,10 @@ plotDifference( suac_comp.linreg, main= "Bill SUAC comparison")
 - Linearity materials, calibrators,EQA material and one elevated patient sample were used to assess comparability.
 
 #+begin_src R :session *R* :results output graphics file :file ../figures/Larry/SUAC_mcr_linreg.pdf :exports results :tangle yes
-  ## suaccomp$Larrycdc <- suaccomp$Larry * suac_mean_rrf
+ suaccomp$Larrycdc <- suaccomp$Larry * larry_rrf
 
-  ## suactrim <- suaccomp %>%
-  ##     filter(AAAC <= 20)
+ suactrim <- suaccomp %>%
+     filter(AAAC <= 20)
 
   suac_comp.linreg <- mcreg(x = suactrim$AAAC, y =suactrim$Larrycdc, error.ratio = 1, alpha = 0.05,
 			    mref.name = "AAAC", mtest.name = "SM1ST CDC adj", sample.names = NULL,
@@ -495,7 +515,7 @@ plotDifference( suac_comp.linreg, main= "Larry SUAC comparison")
 - Linearity materials, calibrators,EQA material and one elevated patient sample were used to assess comparability.
 
 #+begin_src R :session *R* :results output graphics file :file ../figures/Joe/SUAC_mcr_linreg.pdf :exports results :tangle yes
-  suaccomp$Joecdc <- suaccomp$Joe * suac_mean_rrf
+  suaccomp$Joecdc <- suaccomp$Joe * joe_rrf
 
   suactrim <- suaccomp %>%
       filter(AAAC <= 20)
