@@ -34,15 +34,14 @@ argqc <- get_viewdata("Arg", query_qc)
 argmoi <- get_viewdata("Arg", query_moi)
 make_ts("Arg", argqc,argmoi, argrrf)
 
-
 ## ASA
-asapop <- get_data("ASA", 100, query_population)
-asalin <- get_data("ASA", 100, query_linearity)
-asarrf <- find_rrf(asapop, asalin)
-make_plots("ASA", asapop, asalin, asarrf, 0, 0 )
-asaqc <- get_viewdata("ASA", query_qc)
-asamoi <- get_viewdata("ASA", query_moi)
-make_ts("ASA", asaqc, asamoi, asarrf)
+## asapop <- get_data("ASA", 100, query_population)
+## asalin <- get_data("ASA", 10, query_linearity)
+## asarrf <- find_rrf(asapop, asalin)
+## make_plots("ASA", asapop, asalin, asarrf, 0, 0 )
+## asaqc <- get_viewdata("ASA", query_qc)
+## asamoi <- get_viewdata("ASA", query_moi)
+## make_ts("ASA", asaqc, asamoi, asarrf)
 
 ## Cit
 citpop <- get_data("Cit", 100, query_population)
@@ -64,7 +63,6 @@ leuqc <- with_con(query_qc , view_params)
 qcparams <- list('Xleu', 'Leu')
 leumoi <- with_con(query_moi , view_params)
 make_ts("Leu", leuqc, leumoi, leurrf)
-
 
 ## Met
 metpop <- get_data("Met", 100, query_population)
@@ -114,6 +112,33 @@ guacqc <- get_viewdata("GUAC", query_qc)
 guacmoi <- get_viewdata("GUAC", query_moi)
 make_ts("GUAC", guacqc, guacmoi, guacrrf)
 
+### AA secondary
+## Gly
+glypop <- get_data("Gly", 1000, query_population)
+glylin <- get_data("Gly", 1000, query_linearity)
+glyrrf <- find_rrf(glypop, glylin)
+make_plots("Gly", glypop, glylin, glyrrf, 50, 25 )
+glyqc <- get_viewdata("Gly", query_qc)
+glymoi <- get_viewdata("Gly", query_moi)
+make_ts("Gly", glyqc, glymoi, glyrrf)
+
+## Orn
+ornpop <- get_data("Orn", 300, query_population)
+ornlin <- get_data("Orn", 300, query_linearity)
+ornrrf <- find_rrf(ornpop, ornlin)
+make_plots("Orn", ornpop, ornlin, ornrrf, 50, 25 )
+ornqc <- get_viewdata("Orn", query_qc)
+ornmoi <- get_viewdata("Orn", query_moi)
+make_ts("Orn", ornqc, ornmoi, ornrrf)
+
+## Val
+valpop <- get_data("Val", 400, query_population)
+vallin <- get_data("Val", 400, query_linearity)
+valrrf <- find_rrf(valpop, vallin)
+make_plots("Val", valpop, vallin, valrrf, 50, 25 )
+valqc <- get_viewdata("Val", query_qc)
+valmoi <- get_viewdata("Val", query_moi)
+make_ts("Val", valqc, valmoi, valrrf)
 
 ## AC
 #ac_primary <- c("C0","C2","C3","C5","C6","C8","C10","C14:1","C16OH") C5DC
@@ -234,6 +259,31 @@ c18moi <- get_viewdata("C18", query_moi)
 make_ts("C18", c18qc, c18moi, c18rrf)
 
 
+## Secondary AC
+
+## C3DC
+params = list('C3DC_C4OH', 'C3DC', 2.0, 2.0)
+c3dcpop <- with_con(query_population, params)
+c3dclin <- with_con(query_linearity, params)
+c3dcrrf <- find_rrf(c3dcpop, c3dclin)
+make_plots("C3DC", c3dcpop, c3dclin, c3dcrrf, 0.3, 0.1)
+## view_params <- list('C3DC_C4OH', 'C3DC')
+## c3dcqc <- with_con(query_qc, view_params)
+## c3dcmoi <- with_con(query_moi, view_params)
+## make_ts("C3DC", c3dcqc, c3dcmoi, c3dcrrf)
+
+
+## C4DC
+params = list('C4DC_C5OH', 'C5OH', 2.0, 2.0)
+c4dcpop <- with_con(query_population, params)
+c4dclin <- with_con(query_linearity, params)
+c4dcrrf <- find_rrf(c4dcpop, c4dclin)
+make_plots("C4DC", c4dcpop, c4dclin, c4dcrrf, 0.3, 0.1)
+## view_params <- list('C4DC_C4OH', 'C5OH')
+## C4dcqc <- with_con(query_qc, view_params)
+## c4dcmoi <- with_con(query_moi, view_params)
+## make_ts("C4DC", c4dcqc, c4dcmoi, c4dcrrf)
+
 ## ## QC and linearity based RRF adjustment
 
 ## suac
@@ -290,11 +340,17 @@ c16ohqcrrf <- find_rrf(c16ohqc, c16ohlin)
 make_plots("C16OH_QC", c16ohpop, c16ohlin, c16ohqcrrf, 0.2, 0.6 )
 make_ts("C16OH_QC", c16ohqc, c16ohmoi, c16ohqcrrf)
 
-
 primary_analytes <- c("Ala" = alarrf, "Arg" = argrrf, "Cit" = citrrf, "Leu" = leurrf, "Met" = metrrf, "Phe" = pherrf,
                       "Tyr" = tyrrrf, "SUAC" = 1, "GUAC" = guacqcrrf, "C0" = c0rrf,  "C2"= c2rrf, "C3"= c3rrf,
-                      "C5"= c5qcrrf, "C5DC"= c5dcrrf, "C6"= c6qcrrf , "C8"= c8qcrrf, "C10"= c10rrf ,"C141"= c141qcrrf,
+                      "C5"= c5rrf, "C5DC"= c5dcrrf, "C6"= c6qcrrf , "C8"= c8rrf, "C10"= c10rrf ,"C141"= c141qcrrf,
                       "C16" = c16rrf, "C16OH" = c16ohqcrrf, "C18" = c18rrf)
+
+secondary_analytes <- c("Gly" = glyrrf, "Orn" = ornrrf, "Val" = valrrf)
+
+
+rrfs_list <- c(primary_analytes, secondary_analytes)
+rrf_file_name <- paste0("../data/", instrument_name, "_RRF.csv")
+write.csv(rrfs_list, file = rrf_file_name)
 
 
 ## Amino acids
@@ -308,9 +364,12 @@ make_mcr("Tyr", tyrpop, tyrlin, tyrqc)
 make_mcr("SUAC", suacpop, suaclin, suacqc)
 make_mcr("GUAC", guacpop, guaclin, guacqc)
 
+make_mcr("Gly", glypop, glylin, glyqc,rrf_list = secondary_analytes)
+make_mcr("Orn", ornpop, ornlin, ornqc,rrf_list = secondary_analytes)
+make_mcr("Val", valpop, vallin, valqc,rrf_list = secondary_analytes)
+
 
 ## Acylcarnitines
-
 make_mcr("C0", c0pop, c0lin, c0qc)
 make_mcr("C2", c2pop, c2lin, c2qc)
 make_mcr("C3", c3pop, c3lin, c3qc)
@@ -325,7 +384,14 @@ make_mcr("C16OH", c16ohpop, c16ohlin, c16ohqc)
 make_mcr("C18", c18pop, c18lin, c18qc)
 
 
+## Selected reference intervals
 
+## C5DC
+## c5dc_ri <- make_ri("C5DC_C6OH", c5dcpop, c5dcrrf)
+## c3dc_ri <- make_ri("C3DC_C4OH", c3dcpop, c3dcrrf)
+## c4dc_ri <- make_ri("C4DC_C5OH", c4dcpop, c4dcrrf)
+
+## write.csv(rbind(c5dc_ri, c3dc_ri, c4dc_ri), file = "../data/isobar_RIs.csv")
 
 
 

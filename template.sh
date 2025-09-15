@@ -17,6 +17,8 @@ declare -a primary_ac=("C0" "C2" "C3" "C5" "C5DC" "C6" "C8" "C10" "C141" "C16" "
 declare -a low_aa=("SUAC" "GUAC")
 declare -a low_ac=("C5" "C5DC" "C6" "C8" "C141" "C16OH")
 declare -a cdc=("SUAC")
+declare -a secondary_aa=("Gly" "Orn" "Val")
+
 
 echo -n " Enter the instrument name and press [ENTER]:  "
 read instrument
@@ -91,6 +93,31 @@ for analyte in "${primary_ac[@]}"; do
     echo "\clearpage" >> "$org_file_name"
     echo "Text written to $org_file_name"
 done
+
+
+# Secondary Amino acids
+echo "** Secondary Amino Acids" >> "$org_file_name"
+for analyte in "${secondary_aa[@]}"; do
+    echo "*** $analyte" >> "$org_file_name"
+    echo "#+CAPTION[]:${analyte} population and linearity based RRF adjustment" >> "$org_file_name"
+    echo "#+NAME: fig:${analyte}_pop" >> "$org_file_name"
+    echo "#+ATTR_LaTeX: :width 1\textwidth"  >> "$org_file_name"
+    echo "[[file:../figures/${instrument}/${analyte}.pdf]]" >> "$org_file_name"
+    echo "" >> "$org_file_name"
+    
+    echo "#+CAPTION[]:${analyte} QC and MOI time series population based RRF" >> "$org_file_name"
+    echo "#+NAME: fig:${analyte}_ts" >> "$org_file_name"
+    echo "#+ATTR_LaTeX: :width 1\textwidth"  >> "$org_file_name"
+    echo "[[file:../figures/${instrument}/${analyte}_ts.pdf]]" >> "$org_file_name"
+    echo "" >> "$org_file_name"
+
+    echo "\clearpage" >> "$org_file_name"
+    echo "Text written to $org_file_name"
+done
+echo "" >> "$org_file_name"
+
+
+
 
 echo "* QC and linearity material based RRF" >> "$org_file_name"
 

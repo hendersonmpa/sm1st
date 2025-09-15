@@ -5,13 +5,9 @@
 library("tidyverse")
 
 instrument_name <- "Joe" ## used to set figures subdirectory in "functions"
-#instrument_name <- "Joe" ## used to set figures subdirectory in "functions"
-source("./functions.r")
 
-## Bill queries
+source("./functions.r")
 source("./queries.r")
-## Larry and Joe queries 
-## TODO
 
 ## Amino acids
 # aa_primary <- c("Ala","Arg","Asa","Cit","Met","Phe","Tyr","SUAC","GUAC") Leu
@@ -113,6 +109,34 @@ guacqc <- get_csv_viewdata("GUAC", instrument_name, qc_csv_query)
 guacmoi <- get_csv_viewdata("GUAC", instrument_name, moi_csv_query)
 make_ts("GUAC", guacqc, guacmoi, guacrrf)
 
+### AA secondary
+
+## Gly
+glypop <- get_csv_data("Gly", 1000, instrument_name, pop_csv_query)
+glylin <- get_csv_data("Gly", 1000, instrument_name, linearity_csv_query)
+glyrrf <- find_rrf(glypop, glylin)
+make_plots("Gly", glypop, glylin, glyrrf, 50, 25 )
+glyqc <- get_csv_viewdata("Gly", instrument_name, qc_csv_query)
+glymoi <- get_csv_viewdata("Gly", instrument_name, moi_csv_query)
+make_ts("Gly", glyqc, glymoi, glyrrf)
+
+## Orn
+ornpop <- get_csv_data("Orn", 300, instrument_name, pop_csv_query)
+ornlin <- get_csv_data("Orn", 300, instrument_name, linearity_csv_query)
+ornrrf <- find_rrf(ornpop, ornlin)
+make_plots("Orn", ornpop, ornlin, ornrrf, 50, 25 )
+ornqc <- get_csv_viewdata("Orn", instrument_name, qc_csv_query)
+ornmoi <- get_csv_viewdata("Orn", instrument_name, moi_csv_query)
+make_ts("Orn", ornqc, ornmoi, ornrrf)
+
+## Val
+valpop <- get_csv_data("Val", 400, instrument_name, pop_csv_query)
+vallin <- get_csv_data("Val", 400, instrument_name, linearity_csv_query)
+valrrf <- find_rrf(valpop, vallin)
+make_plots("Val", valpop, vallin, valrrf, 50, 25 )
+valqc <- get_csv_viewdata("Val", instrument_name, qc_csv_query)
+valmoi <- get_csv_viewdata("Val", instrument_name, moi_csv_query)
+make_ts("Val", valqc, valmoi, valrrf)
 
 ## AC
 #ac_primary <- c("C0","C2","C3","C5","C6","C8","C10","C14:1","C16OH") C5DC
@@ -153,7 +177,6 @@ make_plots("C5", c5pop, c5lin, c5rrf, 0.5 , 0.1)
 c5qc <- get_csv_viewdata("C5", instrument_name, qc_csv_query)
 c5moi <- get_csv_viewdata("C5", instrument_name, moi_csv_query)
 make_ts("C5", c5qc, c5moi, c5rrf)
-
 
 ## C5DC
 params = list('C5DC', 0.5, 0.5, instrument_name)
@@ -234,7 +257,6 @@ c18qc <- get_csv_viewdata("C18", instrument_name, qc_csv_query)
 c18moi <- get_csv_viewdata("C18", instrument_name, moi_csv_query)
 make_ts("C18", c18qc, c18moi, c18rrf)
 
-
 ## ## QC and linearity based RRF adjustment
 
 ## suac
@@ -257,8 +279,6 @@ c5qcrrf <- find_rrf(c5lowqc, c5lin)
 make_plots("C5_QC", c5pop, c5lin, c5qcrrf, 0.2, 0.7 )
 make_ts("C5_QC", c5qc, c5moi,c5qcrrf)
 
-
-
 ## C5DC
 c5dclowqc <- subset(c5dcqc, sample != "APPOS2")
 c5dcqcrrf <- find_rrf(c5dclowqc, c5dclin)
@@ -266,12 +286,10 @@ make_plots("C5DC_QC", c5dcpop, c5dclin, c5dcqcrrf, 0.3, 0.1)
 qcparams <- list('C5DC_C6OH', 'C5DC')
 make_ts("C5DC_QC", c5dcqc, c5dcmoi, c5dcqcrrf)
 
-
 ## C6
 c6qcrrf <- find_rrf(c6qc, c6lin)
 make_plots("C6_QC", c6pop, c6lin, c6qcrrf, 0.2, 0.7 )
 make_ts("C6_QC", c6qc, c6moi, c6qcrrf)
-
 
 ## C8
 c8lowqc <- subset(c8qc, sample != "APPOS1")
@@ -279,24 +297,28 @@ c8qcrrf <- find_rrf(c8lowqc, c8lin)
 make_plots("C8_QC", c8pop, c8lin, c8qcrrf, 0.5, 0.2)
 make_ts("C8_QC", c8qc, c8moi, c8qcrrf)
 
-
 ## C14:1
 c141qcrrf <- find_rrf(c141qc, c141lin)
 make_plots("C141_QC", c141pop, c141lin, c141qcrrf, 0.5, 0.2 )
 make_ts("C141_QC", c141qc, c141moi, c141qcrrf)
-
 
 ## C16OH
 c16ohqcrrf <- find_rrf(c16ohqc, c16ohlin)
 make_plots("C16OH_QC", c16ohpop, c16ohlin, c16ohqcrrf, 0.2, 0.6 )
 make_ts("C16OH_QC", c16ohqc, c16ohmoi, c16ohqcrrf)
 
-
 primary_analytes <- c("Ala" = alarrf, "Arg" = argrrf, "Cit" = citrrf, "Leu" = leurrf, "Met" = metrrf, "Phe" = pherrf,
                       "Tyr" = tyrrrf, "SUAC" = 1, "GUAC" = guacqcrrf, "C0" = c0rrf,  "C2"= c2rrf, "C3"= c3rrf,
-                      "C5"= c5qcrrf, "C5DC"= c5dcrrf, "C6"= c6qcrrf , "C8"= c8qcrrf, "C10"= c10rrf ,"C141"= c141qcrrf,
+                      "C5"= c5rrf, "C5DC"= c5dcrrf, "C6"= c6qcrrf , "C8"= c8rrf, "C10"= c10rrf ,"C141"= c141qcrrf,
                       "C16" = c16rrf, "C16OH" = c16ohqcrrf, "C18" = c18rrf)
 
+
+secondary_analytes <- c("Gly" = glyrrf, "Orn" = ornrrf, "Val" = valrrf)
+
+
+rrfs_list <- c(primary_analytes, secondary_analytes)
+rrf_file_name <- paste0("../data/", instrument_name, "_RRF.csv")
+write.csv(rrfs_list, file = rrf_file_name)
 
 ## Amino acids
 make_mcr("Ala", alapop, alalin, alaqc)
@@ -311,7 +333,6 @@ make_mcr("GUAC", guacpop, guaclin, guacqc)
 
 
 ## Acylcarnitines
-
 make_mcr("C0", c0pop, c0lin, c0qc)
 make_mcr("C2", c2pop, c2lin, c2qc)
 make_mcr("C3", c3pop, c3lin, c3qc)
@@ -328,5 +349,16 @@ make_mcr("C18", c18pop, c18lin, c18qc)
 
 
 
+## Reference intervals
+sm1st.ri <-  pm.blood %>%
+    select(-classification) %>%
+    pivot_longer(!group, names_to = "analyte", values_to = "value") %>%
+    drop_na(value) %>%
+    group_by(analyte, group) %>%
+    summarise(n = n(),
+	      p025 = quantile(value,probs = c(0.025), type = 8, na.rm = TRUE),
+	      m = median(value, na.rm = TRUE),
+	      p975 = quantile(value,probs = c(0.975), type = 8, na.rm = TRUE)) %>%
+  as.data.frame()
 
-
+  write.csv(blood.ri, file="./data/pm_blood_aa_ac_ri.csv", row.names = FALSE)

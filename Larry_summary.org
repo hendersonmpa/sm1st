@@ -25,8 +25,7 @@
 - [X] Met
   - use the population based RRF (Figure [[fig:Met_pop]])  
 - [X] Phe
-  - Additional review required, and potientially additional analysis with a subset of data.
-  - Population data is slightly elevated after RRF adjustment (Figures [[fig:Phe_pop]], [[fig:Phe_ts]])
+  - Use population based RRF (Figures [[fig:Phe_pop]], [[fig:Phe_ts]])
   - QC data looks very good (Figure [[fig:Phe_ts]])    
 - [X] Tyr
   - removed population data prior to May 15tha
@@ -45,22 +44,22 @@
 - [X] C3
   - use the population based RRF (Figure [[fig:C3_pop]])  
 - [X] C5
-  - use the QC based RRF (Figure [[fig:C5_QC_pop]], [[fig:C5_QC_ts]])
+  - use the population based RRF (Figure [[fig:C5_pop]], [[fig:C5_ts]])
   - High level APPOS2 removed prior to RRF calculation
 - [X] C5DC
-  - use the population based RRF adjustment (Figure [[fig:C5_pop]], [[fig:C5_ts]]))
+  - use the population based RRF adjustment (Figure [[fig:C5_pop]], [[fig:C5_ts]])
   - send more samples to second tier analysis to resolve C5DC from C6OH
 - [X] C6
   - use the QC based RRF (Figures [[fig:C6_QC_pop]], [[fig:C6_QC_ts]])
 - [X] C8
-  - use the QC based based RRF adjustment (Figure [[fig:C8_QC_pop]], [[fig:C8_QC_ts]]))  
+  - use the population based based RRF adjustment (Figure [[fig:C8_pop]], [[fig:C8_ts]])
 - [X] C10
-  - use the population based RRF (Figure [[fig:C10_pop]], [[fig:C10_ts]]))  
+  - use the population based RRF (Figure [[fig:C10_pop]], [[fig:C10_ts]])  
 - [X] C141
   - use the QC based RRF (Figures [[fig:C141_QC_pop]], [[fig:C141_QC_ts]])
 - [X] C16
-  - use the population based RRF (Figure [[fig:C16_pop]], [[fig:C16_ts]]))  
+  - use the population based RRF (Figure [[fig:C16_pop]], [[fig:C16_ts]])  
 - [X] C16OH
   - use the QC based RRF (Figures [[fig:C16OH_QC_pop]], [[fig:C16OH_QC_ts]])
 - [X] C18 
-  - use the population based RRF (Figure [[fig:C18_pop]], [[fig:C18_ts]]))  
+  - use the population based RRF (Figure [[fig:C18_pop]], [[fig:C18_ts]])  

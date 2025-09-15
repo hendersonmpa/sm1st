@@ -133,8 +133,8 @@ make_ts <- function(analyte, qcdata, moidata, rrf, instrument = instrument_name)
         xlab("date")
 
     ggsave(filename = figure_pathname, plot = ts)
+    
 }
-
 
 make_cdc <- function(linearity_data, cdc_data, instrument_name, analyte_str){
     cdc_merge <- merge(linearity_data, cdc_data, by= "sample")
@@ -159,7 +159,7 @@ make_cdc <- function(linearity_data, cdc_data, instrument_name, analyte_str){
   spike_rrf = 1/spike_slope
   cdc_merge$sm1st_spike <- cdc_merge$sm1st* spike_rrf
 
-    spike_cf <- round(coef(spike_model), 2)
+  spike_cf <- round(coef(spike_model), 2)
   spike_c <- round(cor(cdc_merge$sm1st, cdc_merge$sm1st)^2, 3)
   ## sign check to avoid having plus followed by minus for negative coefficients
   spike_eq <- paste0("RRF = ", round(spike_rrf,3),"\n",
@@ -288,4 +288,8 @@ make_mcr <- function(analyte, population, linearity,qc, rrf_list = primary_analy
     dev.off()   
 }
 
-
+make_ri <- function(analyte, population, rrf) {
+    population$sm1strrf <- population$sm1st * rrf
+    ptiles <- quantile(population$sm1strrf,probs = c(0.025, 0.5, 0.975), type = 8, na.rm = TRUE)
+    return(cbind("analyte" = analyte, ptiles))
+}    

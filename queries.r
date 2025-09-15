@@ -122,14 +122,14 @@ inner join aaacqc as aaac
 on csvqc.sample = aaac.sample
 and csvqc.date = aaac.date
 where aaac.analyte = ?
-and csvqc.instrument =?"
+and csvqc.instrument = ?"
 
 
 moi_csv_query <- "select csvmoi.date, aaac.analyte, csvmoi.ANALYTE as sm1st, aaac.mean as aaac from csvmoi 
 inner join aaacmoi as aaac 
 on csvmoi.date = aaac.date
 where aaac.analyte = ?
-and csvmoi.instrument =?"
+and csvmoi.instrument = ?"
 
 
 

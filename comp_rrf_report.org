@@ -258,6 +258,44 @@
 [[file:../figures/Larry/C18_ts.pdf]]
 
 \clearpage
+** Secondary Amino Acids
+*** Gly
+#+CAPTION[]:Gly population and linearity based RRF adjustment
+#+NAME: fig:Gly_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Larry/Gly.pdf]]
+
+#+CAPTION[]:Gly QC and MOI time series population based RRF
+#+NAME: fig:Gly_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Larry/Gly_ts.pdf]]
+
+\clearpage
+*** Orn
+#+CAPTION[]:Orn population and linearity based RRF adjustment
+#+NAME: fig:Orn_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Larry/Orn.pdf]]
+
+#+CAPTION[]:Orn QC and MOI time series population based RRF
+#+NAME: fig:Orn_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Larry/Orn_ts.pdf]]
+
+\clearpage
+*** Val
+#+CAPTION[]:Val population and linearity based RRF adjustment
+#+NAME: fig:Val_pop
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Larry/Val.pdf]]
+
+#+CAPTION[]:Val QC and MOI time series population based RRF
+#+NAME: fig:Val_ts
+#+ATTR_LaTeX: :width 1\textwidth
+[[file:../figures/Larry/Val_ts.pdf]]
+
+\clearpage
+
 * QC and linearity material based RRF
 ** Low concentration primary amino acids
 *** SUAC
