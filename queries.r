@@ -11,7 +11,7 @@ and sm1.sampletype = 'OBS'
 and sm1.sample like 'N%'
 and date(sm1.createdate) > '2025-06-01'
 and date(sm1.createdate) not in ('2025-07-15', '2025-07-16', '2025-07-17')
-and sm1.plate not in ('SM1ST2025010079', 'SM1ST2025010080', 'SM1ST2025010082', 'SM1ST2025010084', 'SM1ST2025010085', 'SM1ST2025010105', 'SnM1ST2025010043', 'SM1ST2025010044', 'SM1ST2025010258', 'SM1ST2025010259', 'SM1ST2025010260')"
+and sm1.plate not in ('SM1ST2025010079', 'SM1ST2025010080', 'SM1ST2025010082', 'SM1ST2025010084', 'SM1ST2025010085', 'SM1ST2025010105', 'SM1ST2025010043', 'SM1ST2025010044', 'SM1ST2025010258', 'SM1ST2025010259', 'SM1ST2025010260')"
 
 
 ## for linearity materials
@@ -45,7 +45,7 @@ and sm1.plate not in ('SM1ST2025010079', 'SM1ST2025010080', 'SM1ST2025010082', '
 ## for qc
 ## create views
 ## create view smqc as select date(createdate) as date, sampletype as type, REGEXP_REPLACE(sample, 'SM1-', '') as sample,  analyte , avg(result) as mean from sm1st
-n## where sampletype = 'LQC'
+## where sampletype = 'LQC'
 ## and analyte in ('Ala' ,'Arg', 'ASA', 'Cit', 'Leu', 'Met', 'Phe', 'Tyr', 'SUAC', 'GUAC', 'C0', 'C2', 'C3', 'C5', 'C5DC_C6OH', 'C5:1', 'C6', 'C8', 'C10', 'C14:1', 'C16', 'C16OH', 'C18')
 ## group by date(createdate), sample, analyte
 
