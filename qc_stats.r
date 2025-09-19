@@ -13,10 +13,10 @@ and plate not in ('SM1ST2025010079', 'SM1ST2025010080', 'SM1ST2025010082', 'SM1S
 group by sample, analyte
 order by analyte, sample"
 
-query_moi <- "select analyte, avg(result) as mean from sm1st
+query_moi <- "select analyte, avg(result) as mean, STDDEV_SAMP(result) as sd from sm1st
 where sampletype = 'OBS'
 and sample like 'N%'
-and date(createdate) > '2025-06-01'
+and date(createdate) > '2025-08-01'
 and plate not in ('SM1ST2025010079', 'SM1ST2025010080', 'SM1ST2025010082', 'SM1ST2025010084', 'SM1ST2025010085', 'SM1ST2025010105', 'SM1ST2025010043', 'SM1ST2025010044', 'SM1ST2025010258', 'SM1ST2025010259', 'SM1ST2025010260')
 group by analyte"
 
