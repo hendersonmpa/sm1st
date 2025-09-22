@@ -37,7 +37,7 @@
      library("tidyverse")
      library("readxl")
      library("mcr")
-     library("zoo")
+     ##library("zoo")
      ##library("VCA")
      ## library("xtable")
      library("stargazer")
@@ -78,7 +78,13 @@
 			 sample like 'N%' AND
 			 createdate >= ?"
 
-     asa <- with_con(sm1st_query, params)
+     #asa <- with_con(sm1st_query, params)
+  asa <- read.csv(file = "../data/asa_data.csv")
+
+  ## %>%
+  ##   filter(analyte == "ASA")
+
+
 
    absdiff <- function(l){
      abs(first(l)-last(l))
@@ -109,7 +115,7 @@
       filter(plate != "SM1ST2025010105" & sample != "N20250515-0122") %>%
        ggplot() +
       geom_density(aes(x = result, fill = plate), alpha = 0.4) +
-    geom_vline(xintercept = 0.32, colour = "red", linetype = "dashed") +
+    geom_vline(xintercept = 15, colour = "red", linetype = "dashed") +
     geom_vline(xintercept = 0.77, colour = "red", linetype = "dashed") +
     guides(fill = "none") +
       ##coord_cartesian(xlim = c(0, 200)) +
@@ -121,7 +127,7 @@
 #+NAME: fig:c26density
 #+ATTR_LaTeX: :width 0.9\textwidth
 #+RESULTS:
-[[file:../figures/c26density_filter.pdf]]
+[[file:../figures/asadensity_filter.pdf]]
 
 
 #+begin_src R :session *R* :results output graphics file :file ../figures/asalate.pdf :exports results :tangle yes
