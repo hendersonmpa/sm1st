@@ -110,6 +110,54 @@ make_plots <- function(analyte, population_data, linearity_data, rrf, xcor,  yco
     ggsave(filename = figure_pathname, plot = p_anot)
 }
 
+
+make_plots2 <- function(analyte, data, rrf, instrument = instrument_name){
+
+    analyte_str <- str_remove(analyte, "[:-[:space:]]")
+    figure_pathname <- paste0("../figures/", instrument, "/", analyte_str, ".pdf")
+    title_str <- paste0(analyte_str," RRF: ", round(rrf, digits = 2))
+    combined_data$sm1strrf <- combined_data$sm1st * rrf
+    population_data$sm1strrf <- population_data$sm1st * rrf
+
+    ## population
+    pop_scatter <- ggplot(population_data, aes(x = aaac, y = sm1st, colour = aaac_instrument)) +
+        geom_point(alpha = 0.2) +
+        geom_smooth(method = lm, se = FALSE) +
+        geom_abline(slope = 1, intercept = 0, colour = "black", lty = 2) +
+        labs(title = "Population", x ="AAAC", y = "SM1ST") 
+
+    pop_dens <- ggplot(population_data) +
+        geom_density(aes(x = aaac, colour = aaac_instrument)) +
+        geom_density(aes(x = sm1st)) +
+        labs(title = "Population", x ="uM") 
+                                     
+    ## linearity
+    lin_scatter <- ggplot(linearity_data, aes(x = aaac, y = sm1st, colour = aaac_instrument)) +
+        geom_point(alpha = 0.2) +
+        geom_smooth(method = lm, se = FALSE) +
+        geom_abline(slope = 1, intercept = 0, colour = "black", lty = 2) +
+        labs(title = "Linearity", x ="AAAC", y = "SM1ST") 
+
+   ## combined rrf adjusted
+    rrf_combi_scatter <- ggplot(combined_data, aes(x = aaac, y = sm1strrf, colour = aaac_instrument)) +
+        geom_point(alpha = 0.2) +
+        geom_smooth(method = lm, se = FALSE) +
+        geom_abline(slope = 1, intercept = 0, colour = "black", lty = 2) +
+        annotate("text", x = xcor, y = ycor, label = paste0("RRF = ", round(rrf, 3))) +
+        labs(title = "RRF combined", x ="AAAC", y = "SM1ST") 
+
+    rrf_pop_dens <- ggplot(population_data) +
+        geom_density(aes(x = aaac, colour = aaac_instrument)) +
+        geom_density(aes(x = sm1strrf)) +
+        labs(title = "RRF population", x ="uM") 
+                                     
+    p <- (pop_scatter | lin_scatter | rrf_combi_scatter)/ (pop_dens | rrf_pop_dens)
+    p_anot <- p + plot_layout(guides = "collect") + plot_annotation(tag_levels = "I",
+                                                                    title = title_str) # Uppercase roman numerics
+    ggsave(filename = figure_pathname, plot = p_anot)
+}
+
+
 make_ts <- function(analyte, qcdata, moidata, rrf, instrument = instrument_name) {
     analyte_str <- str_remove(analyte, "[:-[:space:]]")
     title_str <- paste0(analyte_str," RRF: ", round(rrf, digits = 2))
