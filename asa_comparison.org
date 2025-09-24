@@ -70,31 +70,61 @@
 - using ASA-D3 as the IS 
 
 #+begin_src R :session *R* :results output :exports results :tangle yes
+   library("tidyverse")
+   library("readxl")
+   library("mcr")
+   library("stargazer")
+  library("xtable")
+   source("./functions.r")
+   source("./queries.r")
+   options(warn=-1) # 0 to turn on again
+   options(dplyr.summarise.inform = FALSE)
+
+
   ## CDC adjustment
-  ## ASA
-  bill_asapop <- get_data("ASA", 20, query_population)
-  bill_asalin <- get_data("ASA", 20, query_linearity)
-  bill_asalin_distinct <- bill_asalin %>%
-      distinct(date, sample, sm1st, .keep_all = TRUE) 
+    ## ASA
+    bill_asapop <- get_data("ASA", 20, query_population)
+    bill_asalin <- get_data("ASA", 20, query_linearity)
+    bill_asalin_distinct <- bill_asalin %>%
+	distinct(date, sample, sm1st, .keep_all = TRUE) 
 
-  bill_asaqc <- get_viewdata("ASA", query_qc)
-  bill_asamoi <- get_viewdata("ASA", query_moi)
+    bill_asaqc <- get_viewdata("ASA", query_qc)
+    bill_asamoi <- get_viewdata("ASA", query_moi)
 
-  larry_asapop <- get_csv_data("ASA", 20, "Larry", pop_csv_query)
-  larry_asalin <- get_csv_data("ASA", 20, "Larry", linearity_csv_query)
-  larry_asalin_distinct <- larry_asalin %>%
-      distinct(date, sample, sm1st, .keep_all = TRUE) 
-  larry_asaqc <- get_csv_viewdata("ASA", "Larry", qc_csv_query)
-  larry_asamoi <- get_csv_viewdata("ASA", "Larry", moi_csv_query)
+    larry_asapop <- get_csv_data("ASA", 20, "Larry", pop_csv_query)
+    larry_asalin <- get_csv_data("ASA", 20, "Larry", linearity_csv_query)
+    larry_asalin_distinct <- larry_asalin %>%
+	distinct(date, sample, sm1st, .keep_all = TRUE) 
+    larry_asaqc <- get_csv_viewdata("ASA", "Larry", qc_csv_query)
+    larry_asamoi <- get_csv_viewdata("ASA", "Larry", moi_csv_query)
 
-  joe_asapop <- get_csv_data("ASA", 20, "Joe", pop_csv_query)
-  joe_asalin <- get_csv_data("ASA", 20, "Joe", linearity_csv_query)
-  joe_asalin_distinct <- joe_asalin %>%
-      distinct(date, sample, sm1st, .keep_all = TRUE) 
-  joe_asaqc <- get_csv_viewdata("ASA", "Joe", qc_csv_query)
-  joe_asamoi <- get_csv_viewdata("ASA", "Joe", moi_csv_query)
+    joe_asapop <- get_csv_data("ASA", 20, "Joe", pop_csv_query)
+    joe_asalin <- get_csv_data("ASA", 20, "Joe", linearity_csv_query)
+    joe_asalin_distinct <- joe_asalin %>%
+	distinct(date, sample, sm1st, .keep_all = TRUE) 
+    joe_asaqc <- get_csv_viewdata("ASA", "Joe", qc_csv_query)
+    joe_asamoi <- get_csv_viewdata("ASA", "Joe", moi_csv_query)
 
 #+end_src
+
+#+RESULTS:
+#+begin_example
+── [1mAttaching core tidyverse packages[22m ────────────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+[32m✔[39m [34mdplyr    [39m 1.1.0     [32m✔[39m [34mreadr    [39m 2.1.4
+[32m✔[39m [34mforcats  [39m 1.0.0     [32m✔[39m [34mstringr  [39m 1.5.0
+[32m✔[39m [34mggplot2  [39m 3.4.1     [32m✔[39m [34mtibble   [39m 3.1.8
+[32m✔[39m [34mlubridate[39m 1.9.2     [32m✔[39m [34mtidyr    [39m 1.3.0
+[32m✔[39m [34mpurrr    [39m 1.0.1     
+── [1mConflicts[22m ──────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+[31m✖[39m [34mdplyr[39m::[32mfilter()[39m masks [34mstats[39m::filter()
+[31m✖[39m [34mdplyr[39m::[32mlag()[39m    masks [34mstats[39m::lag()
+[36mℹ[39m Use the conflicted package ([3m[34m<http://conflicted.r-lib.org/>[39m[23m) to force all conflicts to become errors
+
+Please cite as: 
+
+ Hlavac, Marek (2022). stargazer: Well-Formatted Regression and Summary Statistics Tables.
+ R package version 5.2.3. https://CRAN.R-project.org/package=stargazer
+#+end_example
 
 
 #+begin_src R :session *R* :results output graphics file :file ../figures/Bill/asa_dens.pdf :exports results :tangle yes
@@ -160,6 +190,31 @@
 
 #+end_src
 
+#+RESULTS:
+#+begin_example
+[1m[22mSaving 7 x 7 in image
+[1m[22m`geom_smooth()` using formula = 'y ~ x'
+[1m[22m`geom_smooth()` using formula = 'y ~ x'
+[1m[22m`geom_smooth()` using formula = 'y ~ x'
+[1m[22mSaving 7 x 7 in image
+null device 
+          1
+[1m[22mSaving 7 x 7 in image
+[1m[22m`geom_smooth()` using formula = 'y ~ x'
+[1m[22m`geom_smooth()` using formula = 'y ~ x'
+[1m[22m`geom_smooth()` using formula = 'y ~ x'
+[1m[22mSaving 7 x 7 in image
+null device 
+          1
+[1m[22mSaving 7 x 7 in image
+[1m[22m`geom_smooth()` using formula = 'y ~ x'
+[1m[22m`geom_smooth()` using formula = 'y ~ x'
+[1m[22m`geom_smooth()` using formula = 'y ~ x'
+[1m[22mSaving 7 x 7 in image
+null device 
+          1
+#+end_example
+
 
 ** Bill
 #+CAPTION[]:Bill ASA CDC and linearity based RRF adjustment
@@ -192,7 +247,7 @@
 #+begin_export latex
 
 % Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
-% Date and time: Tue, Sep 16, 2025 - 04:57:43 PM
+% Date and time: Wed, Sep 24, 2025 - 10:06:04 AM
 \begin{table}[!htbp] \centering 
   \caption{Bill Summary statistics} 
   \label{tab:bill_summary} 
@@ -201,9 +256,9 @@
 \hline \\[-1.8ex] 
 Statistic & \multicolumn{1}{c}{N} & \multicolumn{1}{c}{Mean} & \multicolumn{1}{c}{St. Dev.} & \multicolumn{1}{c}{Min} & \multicolumn{1}{c}{Max} \\ 
 \hline \\[-1.8ex] 
-sm1st & 10,168 & 8.120 & 3.727 & 0.400 & 20.000 \\ 
-aaac & 10,168 & 0.566 & 0.296 & 0.000 & 6.900 \\ 
-sm1st\_rrf & 10,168 & 8.120 & 3.727 & 0.400 & 20.000 \\ 
+sm1st & 10,919 & 7.994 & 3.667 & 0.400 & 20.000 \\ 
+aaac & 10,919 & 0.568 & 0.292 & 0.000 & 6.900 \\ 
+sm1st\_rrf & 10,919 & 7.994 & 3.667 & 0.400 & 20.000 \\ 
 \hline \\[-1.8ex] 
 \end{tabular} 
 \end{table}
@@ -313,50 +368,43 @@ sm1st\_rrf & 1,245 & 7.761 & 2.469 & 0.321 & 19.990 \\
 * Internal Standard Analysis  
 
 #+begin_src R :session *R* :results output :exports results :tangle yes
-       library("tidyverse")
-       library("readxl")
-      library("mcr")
-      library("stargazer")
-       source("./functions.r")
-       source("./queries.r")
-       options(warn=-1) # 0 to turn on again
-       options(dplyr.summarise.inform = FALSE)
 
-  bill_int_query <- "select date(createdate) as date, instrument, plate, well, sample, analyte, result from sm1st 
-	  where analyte in ('Arg IS INT', 'ASA INT', 'Asa IS Int', 'Asa[-H2O] Int', 'Asa[-H2O] IS Int', 'Cit IS INT', 'Cit')
-	  and date(createdate) > '2025-06-01'"
-
-  bill_int <- with_con(bill_int_query, params = c()) %>%
-	 select(date, instrument, plate, well, sample, analyte, result) %>%
-	  pivot_wider(id_cols = c(date, instrument, plate, well, sample),names_from = analyte, values_from = result) %>%
-	 rename(arg_is = `Arg IS INT`, asa_is = `Asa IS Int`, asa = `ASA INT`,
-		asa_h2o_is = `Asa[-H2O] IS Int`, asa_h2o = `Asa[-H2O] Int`, cit_is = `Cit IS INT`, cit = Cit) %>%
-	 select(-well)
+     bill_int_query <- "select date(createdate) as date, instrument, plate, well, sample, analyte, result from sm1st 
+     where analyte in ('Arg IS INT', 'ASA INT', 'Asa IS Int', 'Asa[-H2O] Int', 'Asa[-H2O] IS Int', 'Cit IS INT', 'Cit')
+     and date(createdate) > '2025-06-01'"
 
 
-  csv_int_query <- "select createdate as date, instrument, plate, sample, ARG_IS_INT, ASA_INT, ASA_IS_INT,
-  ASA_H2O_INT, ASA_H2O_IS_INT, Cit, CIT_IS_INT from csv"
+     bill_int <- with_con(bill_int_query, params = c()) %>%
+       select(date, instrument, plate, well, sample, analyte, result) %>%
+       pivot_wider(id_cols = c(date, instrument, plate, well, sample),names_from = analyte, values_from = result) %>%
+       rename(arg_is = `Arg IS INT`, asa_is = `Asa IS Int`, asa = `ASA INT`,
+	      asa_h2o_is = `Asa[-H2O] IS Int`, asa_h2o = `Asa[-H2O] Int`, cit_is = `Cit IS INT`, cit = Cit) %>%
+       select(-well)
+
+     csv_int_query <- "select createdate as date, instrument, plate, sample, ARG_IS_INT, ASA_INT, ASA_IS_INT, ASA_H2O_INT, ASA_H2O_IS_INT, Cit, CIT_IS_INT from csv"
+  
+
+     csv_int <- with_con(csv_int_query, params = c()) %>%
+       rename(arg_is = arg_is_int, asa_is = asa_is_int, asa = asa_int,
+	      asa_h2o_is = asa_h2o_is_int, asa_h2o = asa_h2o_int, cit = cit,
+	      cit_is = cit_is_int)
+
+     d <- 16.13 ## dilution factor 
+     asa_is_c <- 1
+     arg_is_c <- 5
+     cit_is_c <- 5
+
+     merge_int <- rbind(bill_int, csv_int) %>%
+       transform(asa_r = asa/asa_is * d * asa_is_c,
+		 asa_h2o_r = asa_h2o/asa_h2o_is * d * asa_is_c,
+		 asa_t_r = (asa + asa_h2o)/(asa_is + asa_h2o_is) * d * asa_is_c,
+		 asa_arg_r= asa/arg_is * d * 5 * arg_is_c,
+		 asa_t_arg_r= (asa + asa_h2o)/arg_is * d * arg_is_c,
+		 asa_cit_r= asa/cit_is * d * cit_is_c,
+		 asa_t_cit_r= (asa + asa_h2o)/cit_is * d * cit_is_c)
 
 
-  csv_int <- with_con(csv_int_query, params = c()) %>%
-    rename(arg_is = arg_is_int, asa_is = asa_is_int, asa = asa_int, asa_h2o_is = asa_h2o_is_int,
-	   asa_h2o = asa_h2o_int, cit = cit,  cit_is = cit_is_int)
 
-
-    d <- 16.13 ## dilution factor 
-    asa_is_c <- 1
-    arg_is_c <- 5
-    cit_is_c <- 5
-
-
-    merge_int <- rbind(bill_int, csv_int) %>%
-      transform(asa_r = asa/asa_is * d * asa_is_rrf,
-		asa_h2o_r = asa_h2o/asa_h2o_is * d * asa_is_c,
-		asa_t_r = (asa + asa_h2o)/(asa_is +asa_h2o_is) * d * asa_is_c,
-		asa_arg_r= asa/arg_is * d * 5 * arg_is_c,
-		asa_t_arg_r= (asa + asa_h2o)/arg_is * d * arg_is_c,
-		asa_cit_r= asa/cit_is * d * cit_is_c,
-		asa_t_cit_r= (asa + asa_h2o)/cit_is * d * cit_is_c)
 
 #+end_src  
 
@@ -416,7 +464,7 @@ sm1st\_rrf & 1,245 & 7.761 & 2.469 & 0.321 & 19.990 \\
 
   merge_int %>%
     select(date, instrument, plate, sample, asa_t_cit_r, asa_cit_r, asa_t_arg_r, asa_arg_r, asa_r, asa_h2o_r, asa_t_r) %>%
-    filter(str_detect(sample, "N")) %>%
+    filter(str_detect(sample, "N2025")) %>%
     pivot_longer(cols = -c(date, instrument, plate,sample), names_to = "analyte", values_to = "result") %>%
     group_by(date, instrument, plate, analyte) %>%
     summarize(median = median(result, na.rm = TRUE),
@@ -427,13 +475,12 @@ sm1st\_rrf & 1,245 & 7.761 & 2.469 & 0.321 & 19.990 \\
     geom_hline(yintercept = 10, colour = "red", linetype = "dashed") +
     ylab("Intensity") +
     xlab("Date") +
-    facet_grid(rows = vars(instrument), scales = "free")
-  coord_cartesian(ylim = c(0, 50)) +
-
+    facet_grid(rows = vars(instrument), scales = "free") +
+    coord_cartesian(ylim = c(0, 50)) 
 
 #+end_src
 
-#+CAPTION[]:ASA IS options - NBS samples
+#+CAPTION[]:ASA IS options timeseries - NBS samples
 #+NAME: fig:asa_is
 #+ATTR_LaTeX: :width 0.9\textwidth
 #+RESULTS:
@@ -444,7 +491,7 @@ sm1st\_rrf & 1,245 & 7.761 & 2.469 & 0.321 & 19.990 \\
 
   merge_int %>%
     select(date, instrument, plate, sample, asa_t_cit_r, asa_t_arg_r, asa_t_r) %>%
-    filter(str_detect(sample, "N")) %>%
+    filter(str_detect(sample, "N2025")) %>%
     pivot_longer(cols = -c(date, instrument, plate,sample), names_to = "analyte", values_to = "result") %>%
     transform(week = as.factor(week(date))) %>%
     ggplot(aes(x = week, y = result, colour = analyte)) +
@@ -457,7 +504,7 @@ sm1st\_rrf & 1,245 & 7.761 & 2.469 & 0.321 & 19.990 \\
 
 #+end_src
 
-#+CAPTION[]: ASA IS options - NBS samples
+#+CAPTION[]: ASA IS options boxplot - NBS samples
 #+NAME: fig:asa_is
 #+ATTR_LaTeX: :wpidth 0.9\textwidth
 #+RESULTS:
@@ -476,7 +523,7 @@ sm1st\_rrf & 1,245 & 7.761 & 2.469 & 0.321 & 19.990 \\
     coord_cartesian(ylim = c(0,50))
 #+end_src
 
-#+CAPTION[]: ASA IS options - QC samples
+#+CAPTION[]: ASA IS options boxplot - QC samples
 #+NAME: fig:asa_is
 #+ATTR_LaTeX: :wpidth 0.9\textwidth
 #+RESULTS:
@@ -487,16 +534,19 @@ sm1st\_rrf & 1,245 & 7.761 & 2.469 & 0.321 & 19.990 \\
 \clearpage 
 
 * CDC Comparison
-
 #+begin_src R :session *R* :results output :exports results :tangle yes
   cdc_data <- read.csv(file = "../data/ASA_CDClin.csv")
 
   asa_linearity <- merge_int %>%
       filter(str_detect(sample, "SM1-CDCLin") & date > "2025-08-21") %>%
+      filter(! date %in% c('2025-07-26','2025-09-04', '2025-07-15', '2025-07-26')) %>% 
       select(date, instrument, plate, sample, asa_t_cit_r, asa_t_arg_r,  asa_t_r) %>%
       left_join(cdc_data, by= "sample")
 
+
 #+end_src
+
+#+RESULTS:
 
 #+begin_src R :session *R* :results output graphics file :file ../figures/ASA_CDC_scatter.pdf :exports results :tangle yes
   ggplot(asa_linearity, aes(x = spike, y = asa_t_r, colour = instrument)) +
@@ -506,16 +556,12 @@ sm1st\_rrf & 1,245 & 7.761 & 2.469 & 0.321 & 19.990 \\
 
 #+end_src
 
-
 #+CAPTION[]: CDC comparison with ASA IS
 #+NAME: fig:
 #+ATTR_LaTeX: :width 0.9\textwidth
-[[file:./figures/]]
-
-
-
 #+RESULTS:
 [[file:../figures/ASA_CDC_scatter.pdf]]
+
 
 
 #+begin_src R :session *R* :results output graphics file :file ../figures/ASA_cit_is_CDC_scatter.pdf :exports results :tangle yes
@@ -548,68 +594,95 @@ sm1st\_rrf & 1,245 & 7.761 & 2.469 & 0.321 & 19.990 \\
 
 
 #+begin_src R :session *R* :results output latex :exports results :tangle yes
-  bill_asa_linearity <- asa_linearity %>%
-    filter(instrument == "Bill")
+   bill_asa_linearity <- asa_linearity %>%
+     filter(instrument == "Bill")
 
-  model <- lm(asa_t_r ~ spike , data = bill_asa_linearity)
-  slope = model$coefficients[['spike']]
-  bill_asa_is_rrf = 1/slope
+   model <- lm(asa_t_r ~ spike , data = bill_asa_linearity)
+   slope = model$coefficients[['spike']]
+   bill_asa_is_rrf = 1/slope
 
-  model <- lm(asa_t_arg_r ~ spike , data = bill_asa_linearity)
-  slope = model$coefficients[['spike']]
-  bill_arg_is_rrf = 1/slope
+   model <- lm(asa_t_arg_r ~ spike , data = bill_asa_linearity)
+   slope = model$coefficients[['spike']]
+   bill_arg_is_rrf = 1/slope
 
-  model <- lm(asa_t_cit_r ~ spike , data = bill_asa_linearity)
-  slope = model$coefficients[['spike']]
-  bill_cit_is_rrf = 1/slope
+   model <- lm(asa_t_cit_r ~ spike , data = bill_asa_linearity)
+   slope = model$coefficients[['spike']]
+   bill_cit_is_rrf = 1/slope
 
-  joe_asa_linearity <- asa_linearity %>%
-    filter(instrument == "Joe")
+   joe_asa_linearity <- asa_linearity %>%
+     filter(instrument == "Joe")
 
-  model <- lm(asa_t_r ~ spike , data = joe_asa_linearity)
-  slope = model$coefficients[['spike']]
-  joe_asa_is_rrf = 1/slope
+   model <- lm(asa_t_r ~ spike , data = joe_asa_linearity)
+   slope = model$coefficients[['spike']]
+   joe_asa_is_rrf = 1/slope
 
-  model <- lm(asa_t_arg_r ~ spike , data = joe_asa_linearity)
-  slope = model$coefficients[['spike']]
-  joe_arg_is_rrf = 1/slope
+   model <- lm(asa_t_arg_r ~ spike , data = joe_asa_linearity)
+   slope = model$coefficients[['spike']]
+   joe_arg_is_rrf = 1/slope
 
-  model <- lm(asa_t_cit_r ~ spike , data = joe_asa_linearity)
-  slope = model$coefficients[['spike']]
-  joe_cit_is_rrf = 1/slope
+   model <- lm(asa_t_cit_r ~ spike , data = joe_asa_linearity)
+   slope = model$coefficients[['spike']]
+   joe_cit_is_rrf = 1/slope
 
 
-  larry_asa_linearity <- asa_linearity %>%
-    filter(instrument == "Larry")
+   larry_asa_linearity <- asa_linearity %>%
+     filter(instrument == "Larry")
 
-  model <- lm(asa_t_r ~ spike , data = larry_asa_linearity)
-  slope = model$coefficients[['spike']]
-  larry_asa_is_rrf = 1/slope
+   model <- lm(asa_t_r ~ spike , data = larry_asa_linearity)
+   slope = model$coefficients[['spike']]
+   larry_asa_is_rrf = 1/slope
 
-  model <- lm(asa_t_arg_r ~ spike , data = larry_asa_linearity)
-  slope = model$coefficients[['spike']]
-  larry_arg_is_rrf = 1/slope
+   model <- lm(asa_t_arg_r ~ spike , data = larry_asa_linearity)
+   slope = model$coefficients[['spike']]
+   larry_arg_is_rrf = 1/slope
 
-n  model <- lm(asa_t_cit_r ~ spike , data = larry_asa_linearity)
-  slope = model$coefficients[['spike']]
-  larry_cit_is_rrf = 1/slope
+   model <- lm(asa_t_cit_r ~ spike , data = larry_asa_linearity)
+   slope = model$coefficients[['spike']]
+   larry_cit_is_rrf = 1/slope
 
- cit_rrf <- data.frame(instrument = c("Bill", "Larry", "Joe"),
-			   rrf = c(bill_cit_is_rrf/2, larry_cit_is_rrf/2, joe_cit_is_rrf/2))
+  cit_rrf <- data.frame(instrument = c("Bill", "Larry", "Joe"),
+			    rrf = c(bill_cit_is_rrf/2, larry_cit_is_rrf/2, joe_cit_is_rrf/2))
 
-  adjusted_linearity <- asa_linearity %>%
-    left_join(cit_rrf,  by= "instrument") %>%
-    transform(asa_adjusted = asa_t_cit_r * rrf)
-
-   adjusted_merge_int <- merge_int %>%
-     filter(str_detect(sample, "N")) %>%
-     left_join(cit_rrf, by= "instrument") %>%
+   adjusted_linearity <- asa_linearity %>%
+     left_join(cit_rrf,  by= "instrument") %>%
      transform(asa_adjusted = asa_t_cit_r * rrf)
+
+    adjusted_merge_int <- merge_int %>%
+      filter(str_detect(sample, "N2025")) %>%
+      filter(! date %in% c('2025-07-26','2025-09-04', '2025-07-15', '2025-07-26')) %>% 
+      left_join(cit_rrf, by= "instrument") %>%
+      transform(asa_adjusted = asa_t_cit_r * rrf)
 
 #+end_src
 
 #+RESULTS:
 #+begin_export latex
+#+end_export
+
+
+#+begin_src R :session *R* :results output latex :exports results :tangle yes
+  stargazer(cit_rrf, summary=FALSE, title = "RRFs for ASA using D2-CIT IS for normalization")
+#+end_src
+
+#+RESULTS:
+#+begin_export latex
+
+% Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
+% Date and time: Wed, Sep 24, 2025 - 10:47:41 AM
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}} ccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & instrument & rrf \\ 
+\hline \\[-1.8ex] 
+1 & Bill & $1.684$ \\ 
+2 & Larry & $2.589$ \\ 
+3 & Joe & $1.814$ \\ 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table}
 #+end_export
 
 
@@ -620,7 +693,7 @@ n  model <- lm(asa_t_cit_r ~ spike , data = larry_asa_linearity)
     geom_abline(slope = 1, intercept = 0, colour = "red", linetype = "dashed")
 #+end_src
 
-#+CAPTION[]: CDC comparison with Arg IS
+#+CAPTION[]: CDC comparison with after Instrument RRF adjustment for 50% recovery 
 #+NAME: fig:
 #+ATTR_LaTeX: :width 0.9\textwidth
 #+RESULTS:
@@ -645,11 +718,59 @@ n  model <- lm(asa_t_cit_r ~ spike , data = larry_asa_linearity)
       coord_cartesian(ylim = c(0,25))
 #+end_src
 
+#+CAPTION[]: Times series of after Instrument RRF adjustment for 50% recovery 
+#+NAME: fig:
 #+RESULTS:
 [[file:../figures/adjusted_ASA_ts.pdf]]
 
 
-* COMMENT Simulation
+
+
+#+begin_src R :session *R* :results output graphics file :file ../figures/adjusted_asa_dens.pdf :exports results :tangle yes
+  ggplot(adjusted_merge_int) +
+    geom_density(aes(x = asa_adjusted,  colour = instrument)) +
+    coord_cartesian(xlim = c(0,30))
+
+#+end_src
+
+#+CAPTION[]: Adjusted ASA distribution in population by instrument 
+#+NAME: fig:adjusted_popdens
+#+ATTR_LaTeX: :width 0.9\textwidth
+#+RESULTS:
+[[file:../figures/adjusted_asa_dens.pdf]]
+
+
+
+#+begin_src R :session *R* :results output latex :exports results :tangle yes
+  stargazer(quantile(adjusted_merge_int$asa_adjusted, probs = c(0.025,0.5, 0.975, 0.999)),
+	    title = "ASA population quantiles",
+	    label = "tab:rifirst",
+	    digits = 2,
+	    summary = FALSE,
+	    rownames = FALSE)
+#+end_src
+
+#+RESULTS:
+#+begin_export latex
+
+% Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
+n% Date and time: Wed, Sep 24, 2025 - 11:25:47 AM
+\begin{table}[!htbp] \centering 
+  \caption{ASA population quantiles} 
+  \label{tab:rifirst} 
+\begin{tabular}{@{\extracolsep{5pt}} cccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+2.5\% & 50\% & 97.5\% & 99.9\% \\ 
+\hline \\[-1.8ex] 
+$1.91$ & $4.04$ & $10.96$ & $41.98$ \\ 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table}
+#+end_export
+
+
+* Simulation
 
 - The intention of this simulation is to determine the impact of potential first tier ASA thresholds
 - Inputs:
@@ -661,51 +782,37 @@ n  model <- lm(asa_t_cit_r ~ spike , data = larry_asa_linearity)
   - The ASA  population data (n ~ 12,000) was sampled 1000 times
     - The size of the weekly population sample was derived from a
       normal distribution with mean 2840 and SD 297
-  - The ASA threshold applied was varied from 2.5 to 3.0 in increments
-    of 0.1 for each population sample
+  - The ASA threshold applied was varied from 10 to 30 in increments
+    of 1 for each population sample
     - The ASA logic using the current threshold was applied to each
       result in the population sample.
   - The number of results \ge the threshold for each data sample was recorded
 
 
-#+begin_src R :session *R* :results output :exports results :tangle yes
-    ###### weekly volumes
-    ## volume$date_time  <- ymd_hms(volume$DateTime)
-    ##   volume$nbs_entered_today<- as.numeric(volume$NBSEnteredToday)
-
-    ##   volume_week <- volume %>%
-    ## 	  group_by(week = date(floor_date(date_time, unit = "week"))) %>%
-    ## 	  summarise(sum = sum(nbs_entered_today)) %>%
-    ## 	  filter(week >= "2020-01-01" & week <= "2021-12-31") ## Two years
-
-    ##   ggplot(volume_week) +
-    ##     geom_histogram(aes(x=sum), binwidth = 100)
-
-    start <- 10
-    end <- 30
-    mean_volume= 2840
-    sd_volume= 297
-
-
+#+begin_src R :session *R* :results output :exports results :tangle yes :cache yes
+  start <- 10
+  end <- 30
+  mean_volume= 2840
+  sd_volume= 297
 
   cit_initial_logic <- function(data, threshold) {
-   # positive <- length(data[data$cit >= 100 | data$asa_adjusted >= threshold,])
-    positive <- length(data[data$asa_adjusted >= threshold,])
-    return(positive)
-    }  
+     #positive <- nrow(data[data$cit >= 60 & data$asa_adjusted >= threshold,])
+     positive <- nrow(data[data$cit >= 70 | (data$cit >= 60 & data$asa_adjusted >= threshold),])
+     return(positive)
+  }  
 
-  citinitial <- data.frame(sample = double(), volume = double(), threshold= double(),
-			    initial_positive = double(), stringsAsFactors = FALSE)
+   citinitial <- data.frame(sample = double(), volume = double(), threshold= double(),
+			     initial_positive = double(), stringsAsFactors = FALSE)
   c <- 0
-  for (s in 1:1000) {
-    v <- rnorm(n=1, mean = mean_volume, sd = sd_volume) ## sample volume$date
-     data_sample <- sample_n(adjusted_merge_int, v, replace = FALSE)
-      for (t in seq(from = start, to = end, by = 1)) {
-	c <- c + 1
-	p <- cit_initial_logic(data=data_sample, threshold=t)
-	citinitial[c,] <- list(sample = s, volume=v, threshold = t, initial_positive =p)
-      }
-    }
+   for (s in 1:1000) {
+     v <- rnorm(n=1, mean = mean_volume, sd = sd_volume) ## sample volume$date
+      data_sample <- sample_n(adjusted_merge_int, v, replace = FALSE)
+       for (t in seq(from = start, to = end, by = 1)) {
+	 c <- c + 1
+	 p <- cit_initial_logic(data=data_sample, threshold=t)
+	 citinitial[c,] <- list(sample = s, volume=v, threshold = t, initial_positive =p)
+       }
+     }
 
 #+end_src
 
@@ -713,7 +820,7 @@ n  model <- lm(asa_t_cit_r ~ spike , data = larry_asa_linearity)
 
 
 #+begin_src R :session *R* :results output latex :exports results :tangle yes
-  citinitial %>%
+citinitial %>%
     group_by(threshold) %>%
     summarise( min = min(initial_positive),
 	      p025 = quantile(initial_positive,probs = c(0.025), type = 8, na.rm = TRUE),
@@ -723,44 +830,162 @@ n  model <- lm(asa_t_cit_r ~ spike , data = larry_asa_linearity)
     as.data.frame() %>%
 					# write.csv(,file = "../data/tyr1_simulation.csv") 
     stargazer(summary = FALSE, rownames = FALSE,
-	      title="Output of Cit initial logic simulation for weekly volumes" ,
+	      title="Output of Cit confirmation logic simulation for weekly volumes" ,
 		label = "tab:sim")
 
 #+end_src
 
 #+RESULTS:
 #+begin_export latex
+
 % Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
-% Date and time: Tue, Sep 23, 2025 - 06:14:40 PM
+% Date and time: Wed, Sep 24, 2025 - 10:36:09 AM
 \begin{table}[!htbp] \centering 
-  \caption{Output of Cit initial logic simulation for weekly volumes} 
+  \caption{Output of Cit confirmation logic simulation for weekly volumes} 
   \label{tab:sim} 
 \begin{tabular}{@{\extracolsep{5pt}} cccccc} 
 \\[-1.8ex]\hline 
 \hline \\[-1.8ex] 
 threshold & min & p025 & median & p975 & max \\ 
 \hline \\[-1.8ex] 
-$10$ & $20$ & $20$ & $20$ & $20$ & $20$ \\ 
-$11$ & $20$ & $20$ & $20$ & $20$ & $20$ \\ 
-$12$ & $20$ & $20$ & $20$ & $20$ & $20$ \\ 
-$13$ & $20$ & $20$ & $20$ & $20$ & $20$ \\ 
-$14$ & $20$ & $20$ & $20$ & $20$ & $20$ \\ 
-$15$ & $20$ & $20$ & $20$ & $20$ & $20$ \\ 
-$16$ & $20$ & $20$ & $20$ & $20$ & $20$ \\ 
-$17$ & $20$ & $20$ & $20$ & $20$ & $20$ \\ 
-$18$ & $20$ & $20$ & $20$ & $20$ & $20$ \\ 
-$19$ & $20$ & $20$ & $20$ & $20$ & $20$ \\ 
-$20$ & $20$ & $20$ & $20$ & $20$ & $20$ \\ 
-$21$ & $20$ & $20$ & $20$ & $20$ & $20$ \\ 
-$22$ & $20$ & $20$ & $20$ & $20$ & $20$ \\ 
-$23$ & $20$ & $20$ & $20$ & $20$ & $20$ \\ 
-$24$ & $20$ & $20$ & $20$ & $20$ & $20$ \\ 
-$25$ & $20$ & $20$ & $20$ & $20$ & $20$ \\ 
-$26$ & $20$ & $20$ & $20$ & $20$ & $20$ \\ 
-$27$ & $20$ & $20$ & $20$ & $20$ & $20$ \\ 
-$28$ & $20$ & $20$ & $20$ & $20$ & $20$ \\ 
-$29$ & $20$ & $20$ & $20$ & $20$ & $20$ \\ 
-$30$ & $20$ & $20$ & $20$ & $20$ & $20$ \\ 
+$10$ & $0$ & $0$ & $1$ & $4$ & $5$ \\ 
+$11$ & $0$ & $0$ & $1$ & $4$ & $5$ \\ 
+$12$ & $0$ & $0$ & $1$ & $4$ & $5$ \\ 
+$13$ & $0$ & $0$ & $1$ & $3$ & $5$ \\ 
+$14$ & $0$ & $0$ & $1$ & $3$ & $5$ \\ 
+$15$ & $0$ & $0$ & $1$ & $3$ & $5$ \\ 
+$16$ & $0$ & $0$ & $1$ & $3$ & $5$ \\ 
+$17$ & $0$ & $0$ & $1$ & $3$ & $5$ \\ 
+$18$ & $0$ & $0$ & $1$ & $3$ & $5$ \\ 
+$19$ & $0$ & $0$ & $1$ & $3$ & $5$ \\ 
+$20$ & $0$ & $0$ & $1$ & $3$ & $5$ \\ 
+$21$ & $0$ & $0$ & $1$ & $3$ & $5$ \\ 
+$22$ & $0$ & $0$ & $1$ & $3$ & $5$ \\ 
+$23$ & $0$ & $0$ & $1$ & $3$ & $5$ \\ 
+$24$ & $0$ & $0$ & $1$ & $3$ & $5$ \\ 
+$25$ & $0$ & $0$ & $1$ & $3$ & $5$ \\ 
+$26$ & $0$ & $0$ & $1$ & $3$ & $5$ \\ 
+$27$ & $0$ & $0$ & $1$ & $3$ & $5$ \\ 
+$28$ & $0$ & $0$ & $1$ & $3$ & $5$ \\ 
+$29$ & $0$ & $0$ & $1$ & $3$ & $5$ \\ 
+$30$ & $0$ & $0$ & $1$ & $3$ & $5$ \\ 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table}
+#+end_export
+
+
+* QC and MOI
+
+
+#+begin_src R :session *R* :results output graphics file :file ../figures/ASA_QC_ts.pdf :exports results :tangle yes
+
+  adjusted_merge_qc <- merge_int %>%
+    filter(sample %in% c("SM1-APNEG", "SM1-APPOS1", "SM1-APPOS2")) %>%
+    filter(! date %in% c('2025-07-26','2025-09-04', '2025-07-15', '2025-07-26')) %>% 
+    left_join(cit_rrf, by= "instrument") %>%
+    transform(asa_adjusted = asa_t_cit_r * rrf) %>%
+    select(date, instrument,sample, asa_adjusted) 
+
+
+  adjusted_merge_moi <- adjusted_merge_int %>%
+    group_by(day = floor_date(date, unit = "day"), instrument) %>%
+       summarise(moi = mean(asa_adjusted)) 
+
+  ggplot(adjusted_merge_qc, aes(x = date, y = asa_adjusted, colour = instrument)) +
+    geom_line() +
+    scale_x_date(date_labels = "%b-%y") +
+    facet_grid(sample~., scales = "free_y") +
+    ylab("conc") +
+    xlab("date")
+
+#+end_src
+
+#+RESULTS:
+[[file:./figures/ASA_QC_ts.pdf]]
+
+
+
+#+begin_src R :session *R* :results output latex :exports results :tangle yes
+    adjusted_merge_qc %>%
+      group_by(instrument, sample) %>%
+      summarise(mean = mean(asa_adjusted, na.rm=TRUE),
+		sd = sd(asa_adjusted, na.rm=TRUE)) %>%
+      as.data.frame() %>%
+      stargazer(title = "QC Summary", summary= FALSE)
+#+end_src
+
+#+RESULTS:
+#+begin_export latex
+
+% Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
+% Date and time: Wed, Sep 24, 2025 - 12:20:04 PM
+\begin{table}[!htbp] \centering 
+  \caption{QC Summary} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}} ccccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & instrument & sample & mean & sd \\ 
+\hline \\[-1.8ex] 
+1 & Bill & SM1-APNEG & $2.710$ & $2.657$ \\ 
+2 & Bill & SM1-APPOS1 & $18.978$ & $7.191$ \\ 
+3 & Bill & SM1-APPOS2 & $13.058$ & $4.140$ \\ 
+4 & Joe & SM1-APNEG & $3.536$ & $1.958$ \\ 
+5 & Joe & SM1-APPOS1 & $25.990$ & $6.531$ \\ 
+6 & Joe & SM1-APPOS2 & $17.800$ & $4.833$ \\ 
+7 & Larry & SM1-APNEG & $2.464$ & $1.428$ \\ 
+8 & Larry & SM1-APPOS1 & $22.562$ & $5.224$ \\ 
+9 & Larry & SM1-APPOS2 & $15.733$ & $4.253$ \\ 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table}
+#+end_export
+
+
+
+
+#+begin_src R :session *R* :results output graphics file :file ../figures/ASA_moi_ts.pdf :exports results :tangle yes
+
+    ggplot(adjusted_merge_moi, aes(x = day, y = moi, colour = instrument)) +
+    geom_line() +
+    scale_x_date(date_labels = "%b-%y") +
+    ylab("conc") +
+    xlab("date")
+
+#+end_src
+
+#+RESULTS:
+[[file:../figures/ASA_moi_ts.pdf]]
+  
+
+
+#+begin_src R :session *R* :results output latex :exports results :tangle yes
+  adjusted_merge_moi %>%
+    group_by(instrument) %>%
+    summarise(mean = mean(moi, na.rm=TRUE),
+	      sd = sd(moi, na.rm=TRUE)) %>%
+    as.data.frame() %>%
+    stargazer(title = "MOI Summary", summary= FALSE)
+
+#+end_src
+
+#+RESULTS:
+#+begin_export latex
+
+% Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
+% Date and time: Wed, Sep 24, 2025 - 12:23:31 PM
+\begin{table}[!htbp] \centering 
+  \caption{MOI Summary} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}} cccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & instrument & mean & sd \\ 
+\hline \\[-1.8ex] 
+1 & Bill & $4.522$ & $1.284$ \\ 
+2 & Joe & $6.486$ & $4.184$ \\ 
+3 & Larry & $Inf$ & $$ \\ 
 \hline \\[-1.8ex] 
 \end{tabular} 
 \end{table}
