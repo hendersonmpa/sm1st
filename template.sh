@@ -13,12 +13,12 @@ declare -r reports="../reports"
 declare -r today=$(date +"%F-%H-%M") ## YYYY-MM-DD-HH-MM
 declare -a org_file_name="comp_rrf_report.org"
 declare -a primary_aa=("Ala" "Arg" "Cit" "Leu" "Met" "Phe" "Tyr" "SUAC" "GUAC")
-declare -a primary_ac=("C0" "C2" "C3" "C5" "C5DC" "C6" "C8" "C10" "C141" "C16" "C16OH" "C18")
+declare -a primary_ac=("C0" "C2" "C3" "C5" "C5DC_C6OH" "C6" "C8" "C10" "C141" "C16" "C16OH" "C18")
 declare -a low_aa=("SUAC" "GUAC")
-declare -a low_ac=("C5" "C5DC" "C6" "C8" "C141" "C16OH")
+declare -a low_ac=("C5" "C5DC_C6OH" "C6" "C8" "C141" "C16OH")
 declare -a cdc=("SUAC")
-declare -a secondary_aa=("Gly" "Orn" "Val")
-
+declare -a secondary_aa=("Gly" "Orn" "Val" "Cre")
+declare -a secondary_ac=("C4" "C51" "C3DC_C4OH" "C4DC_C5OH" "C81" "C101" "C121" "C12" "C142" "C14" "C14OH" "C161OH" "C182" "C181" "C181OH")
 
 echo -n " Enter the instrument name and press [ENTER]:  "
 read instrument
@@ -51,12 +51,14 @@ EOF
 
 echo "#+INCLUDE: ./${instrument}_summary.org"  >> "$org_file_name"
 
-echo "* Population and linearity based RRF" >> "$org_file_name"
+echo "* Primary Analytes" >> "$org_file_name"
+echo "** Population and linearity based RRF" >> "$org_file_name"
+
 
 # Amino acids
-echo "** Primary Amino Acids" >> "$org_file_name"
+echo "*** Primary Amino Acids" >> "$org_file_name"
 for analyte in "${primary_aa[@]}"; do
-    echo "*** $analyte" >> "$org_file_name"
+    echo "**** $analyte" >> "$org_file_name"
     echo "#+CAPTION[]:${analyte} population and linearity based RRF adjustment" >> "$org_file_name"
     echo "#+NAME: fig:${analyte}_pop" >> "$org_file_name"
     echo "#+ATTR_LaTeX: :width 1\textwidth"  >> "$org_file_name"
@@ -75,9 +77,9 @@ done
 echo "" >> "$org_file_name"
 
 # Acylcarnitines
-echo "** Primary Acylcarnitines" >> "$org_file_name"
+echo "*** Primary Acylcarnitines" >> "$org_file_name"
 for analyte in "${primary_ac[@]}"; do
-    echo "*** $analyte" >> "$org_file_name"
+    echo "**** $analyte" >> "$org_file_name"
     echo "#+CAPTION[]:${analyte} population and linearity based RRF adjustment" >> "$org_file_name"
     echo "#+NAME: fig:${analyte}_pop" >> "$org_file_name"
     echo "#+ATTR_LaTeX: :width 1\textwidth"  >> "$org_file_name"
@@ -95,36 +97,13 @@ for analyte in "${primary_ac[@]}"; do
 done
 
 
-# Secondary Amino acids
-echo "** Secondary Amino Acids" >> "$org_file_name"
-for analyte in "${secondary_aa[@]}"; do
-    echo "*** $analyte" >> "$org_file_name"
-    echo "#+CAPTION[]:${analyte} population and linearity based RRF adjustment" >> "$org_file_name"
-    echo "#+NAME: fig:${analyte}_pop" >> "$org_file_name"
-    echo "#+ATTR_LaTeX: :width 1\textwidth"  >> "$org_file_name"
-    echo "[[file:../figures/${instrument}/${analyte}.pdf]]" >> "$org_file_name"
-    echo "" >> "$org_file_name"
-    
-    echo "#+CAPTION[]:${analyte} QC and MOI time series population based RRF" >> "$org_file_name"
-    echo "#+NAME: fig:${analyte}_ts" >> "$org_file_name"
-    echo "#+ATTR_LaTeX: :width 1\textwidth"  >> "$org_file_name"
-    echo "[[file:../figures/${instrument}/${analyte}_ts.pdf]]" >> "$org_file_name"
-    echo "" >> "$org_file_name"
 
-    echo "\clearpage" >> "$org_file_name"
-    echo "Text written to $org_file_name"
-done
-echo "" >> "$org_file_name"
-
-
-
-
-echo "* QC and linearity material based RRF" >> "$org_file_name"
+echo "** QC and linearity material based RRF" >> "$org_file_name"
 
 # Amino acids
-echo "** Low concentration primary amino acids" >> "$org_file_name"
+echo "*** Low concentration primary amino acids" >> "$org_file_name"
 for analyte in "${low_aa[@]}"; do
-    echo "*** $analyte" >> "$org_file_name"
+    echo "**** $analyte" >> "$org_file_name"
     echo "#+CAPTION[]:${analyte} QC and linearity based RRF adjustment" >> "$org_file_name"
     echo "#+NAME: fig:${analyte}_QC_pop" >> "$org_file_name"
     echo "#+ATTR_LaTeX: :width 1\textwidth"  >> "$org_file_name"
@@ -145,9 +124,9 @@ done
 
 echo "" >> "$org_file_name"
 # Acylcarnitines
-echo "** Low concentration primary acylcarnitines" >> "$org_file_name"
+echo "*** Low concentration primary acylcarnitines" >> "$org_file_name"
 for analyte in "${low_ac[@]}"; do
-    echo "*** $analyte" >> "$org_file_name"
+    echo "**** $analyte" >> "$org_file_name"
     echo "#+CAPTION[]:${analyte} population and linearity based RRF adjustment" >> "$org_file_name"
     echo "#+NAME: fig:${analyte}_QC_pop" >> "$org_file_name"
     echo "#+ATTR_LaTeX: :width 1\textwidth"  >> "$org_file_name"
@@ -164,12 +143,12 @@ for analyte in "${low_ac[@]}"; do
     echo "Text written to $org_file_name"
 done
 
-echo "* SM1ST and AAAC comparison" >> "$org_file_name"
+echo "** SM1ST and AAAC comparison" >> "$org_file_name"
 
 # Amino acids
-echo "** Primary Amino Acids" >> "$org_file_name"
+echo "*** Primary Amino Acids" >> "$org_file_name"
 for analyte in "${primary_aa[@]}"; do
-    echo "*** $analyte" >> "$org_file_name"
+    echo "**** $analyte" >> "$org_file_name"
     echo "#+CAPTION[]:${analyte} SM1ST and AAAC regression after RRF adjustment" >> "$org_file_name"
     echo "#+NAME: fig:${analyte}_reg" >> "$org_file_name"
     echo "#+ATTR_LaTeX: :width 1\textwidth"  >> "$org_file_name"
@@ -181,14 +160,60 @@ done
 echo "" >> "$org_file_name"
 
 
-echo "** Primary Acylcarnitines" >> "$org_file_name"
+echo "*** Primary Acylcarnitines" >> "$org_file_name"
 for analyte in "${primary_ac[@]}"; do
-    echo "*** $analyte" >> "$org_file_name"
+    echo "**** $analyte" >> "$org_file_name"
     echo "#+CAPTION[]:${analyte} SM1ST and AAAC regression after RRF adjustment" >> "$org_file_name"
     echo "#+NAME: fig:${analyte}_reg" >> "$org_file_name"
     echo "#+ATTR_LaTeX: :width 1\textwidth"  >> "$org_file_name"
     echo "[[file:../figures/${instrument}/${analyte}_regression.pdf]]" >> "$org_file_name"
     echo "" >> "$org_file_name"
+    echo "\clearpage" >> "$org_file_name"
+    echo "Text written to $org_file_name"
+done
+echo "" >> "$org_file_name"
+
+
+
+echo "* Secondary Analyte" >> "$org_file_name"
+echo "** Population and linearity based RRF" >> "$org_file_name"
+
+# Secondary Amino acids
+echo "*** Secondary Amino Acids" >> "$org_file_name"
+for analyte in "${secondary_aa[@]}"; do
+    echo "**** $analyte" >> "$org_file_name"
+    echo "#+CAPTION[]:${analyte} population and linearity based RRF adjustment" >> "$org_file_name"
+    echo "#+NAME: fig:${analyte}_pop" >> "$org_file_name"
+    echo "#+ATTR_LaTeX: :width 1\textwidth"  >> "$org_file_name"
+    echo "[[file:../figures/${instrument}/${analyte}.pdf]]" >> "$org_file_name"
+    echo "" >> "$org_file_name"
+    
+    echo "#+CAPTION[]:${analyte} QC and MOI time series population based RRF" >> "$org_file_name"
+    echo "#+NAME: fig:${analyte}_ts" >> "$org_file_name"
+    echo "#+ATTR_LaTeX: :width 1\textwidth"  >> "$org_file_name"
+    echo "[[file:../figures/${instrument}/${analyte}_ts.pdf]]" >> "$org_file_name"
+    echo "" >> "$org_file_name"
+
+    echo "\clearpage" >> "$org_file_name"
+    echo "Text written to $org_file_name"
+done
+echo "" >> "$org_file_name"
+
+echo "*** Secondary Acylcarnitines" >> "$org_file_name"
+for analyte in "${secondary_ac[@]}"; do
+    echo "**** $analyte" >> "$org_file_name"
+    echo "#+CAPTION[]:${analyte} population and linearity based RRF adjustment" >> "$org_file_name"
+    echo "#+NAME: fig:${analyte}_pop" >> "$org_file_name"
+    echo "#+ATTR_LaTeX: :width 1\textwidth"  >> "$org_file_name"
+    echo "[[file:../figures/${instrument}/${analyte}.pdf]]" >> "$org_file_name"
+    echo "" >> "$org_file_name"
+    
+    echo "#+CAPTION[]:${analyte} QC and MOI time series population based RRF" >> "$org_file_name"
+    echo "#+NAME: fig:${analyte}_ts" >> "$org_file_name"
+    echo "#+ATTR_LaTeX: :width 1\textwidth"  >> "$org_file_name"
+    echo "[[file:../figures/${instrument}/${analyte}_ts.pdf]]" >> "$org_file_name"
+    echo "" >> "$org_file_name"
+
     echo "\clearpage" >> "$org_file_name"
     echo "Text written to $org_file_name"
 done

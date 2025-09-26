@@ -425,7 +425,6 @@ sm1st\_rrf & 1,171 & 1.469 & 0.285 & 0.802 & 3.342 \\
 
 
 * Comparison
-
 ** Bill
 - What is the equivalent of AAAC 5 uM with SM1ST after CDC adjustment?
 - Linearity materials, calibrators,EQA material and one elevated patient sample were used to assess comparability.

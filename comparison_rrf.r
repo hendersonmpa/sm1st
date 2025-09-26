@@ -109,36 +109,9 @@ guaclin <- get_data("GUAC", 10, query_linearity)
 guacrrf <- find_rrf(guacpop, guaclin)
 make_plots("GUAC", guacpop, guaclin, guacrrf, 4, 2 )
 guacqc <- get_viewdata("GUAC", query_qc)
-guacmoi <- get_viewdata("GUAC", query_moi)
+nguacmoi <- get_viewdata("GUAC", query_moi)
 make_ts("GUAC", guacqc, guacmoi, guacrrf)
 
-### AA secondary
-## Gly
-glypop <- get_data("Gly", 1000, query_population)
-glylin <- get_data("Gly", 1000, query_linearity)
-glyrrf <- find_rrf(glypop, glylin)
-make_plots("Gly", glypop, glylin, glyrrf, 50, 25 )
-glyqc <- get_viewdata("Gly", query_qc)
-glymoi <- get_viewdata("Gly", query_moi)
-make_ts("Gly", glyqc, glymoi, glyrrf)
-
-## Orn
-ornpop <- get_data("Orn", 300, query_population)
-ornlin <- get_data("Orn", 300, query_linearity)
-ornrrf <- find_rrf(ornpop, ornlin)
-make_plots("Orn", ornpop, ornlin, ornrrf, 50, 25 )
-ornqc <- get_viewdata("Orn", query_qc)
-ornmoi <- get_viewdata("Orn", query_moi)
-make_ts("Orn", ornqc, ornmoi, ornrrf)
-
-## Val
-valpop <- get_data("Val", 400, query_population)
-vallin <- get_data("Val", 400, query_linearity)
-valrrf <- find_rrf(valpop, vallin)
-make_plots("Val", valpop, vallin, valrrf, 50, 25 )
-valqc <- get_viewdata("Val", query_qc)
-valmoi <- get_viewdata("Val", query_moi)
-make_ts("Val", valqc, valmoi, valrrf)
 
 ## AC
 #ac_primary <- c("C0","C2","C3","C5","C6","C8","C10","C14:1","C16OH") C5DC
@@ -186,11 +159,11 @@ params = list('C5DC_C6OH', 'C5DC', 0.5, 0.5)
 c5dcpop <- with_con(query_population , params)
 c5dclin <- with_con(query_linearity , params)
 c5dcrrf <- find_rrf(c5dcpop, c5dclin)
-make_plots("C5DC", c5dcpop, c5dclin, c5dcrrf, 0.3, 0.1)
+make_plots("C5DC_C6OH", c5dcpop, c5dclin, c5dcrrf, 0.3, 0.1)
 view_params <- list('C5DC_C6OH', 'C5DC')
 c5dcqc <- with_con(query_qc , view_params)
 c5dcmoi <- with_con(query_moi , view_params)
-make_ts("C5DC", c5dcqc, c5dcmoi, c5dcrrf)
+make_ts("C5DC_C6OH", c5dcqc, c5dcmoi, c5dcrrf)
 
 
 ## C6
@@ -259,30 +232,6 @@ c18moi <- get_viewdata("C18", query_moi)
 make_ts("C18", c18qc, c18moi, c18rrf)
 
 
-## Secondary AC
-
-## C3DC
-params = list('C3DC_C4OH', 'C3DC', 2.0, 2.0)
-c3dcpop <- with_con(query_population, params)
-c3dclin <- with_con(query_linearity, params)
-c3dcrrf <- find_rrf(c3dcpop, c3dclin)
-make_plots("C3DC", c3dcpop, c3dclin, c3dcrrf, 0.3, 0.1)
-## view_params <- list('C3DC_C4OH', 'C3DC')
-## c3dcqc <- with_con(query_qc, view_params)
-## c3dcmoi <- with_con(query_moi, view_params)
-## make_ts("C3DC", c3dcqc, c3dcmoi, c3dcrrf)
-
-
-## C4DC
-params = list('C4DC_C5OH', 'C5OH', 2.0, 2.0)
-c4dcpop <- with_con(query_population, params)
-c4dclin <- with_con(query_linearity, params)
-c4dcrrf <- find_rrf(c4dcpop, c4dclin)
-make_plots("C4DC", c4dcpop, c4dclin, c4dcrrf, 0.3, 0.1)
-## view_params <- list('C4DC_C4OH', 'C5OH')
-## C4dcqc <- with_con(query_qc, view_params)
-## c4dcmoi <- with_con(query_moi, view_params)
-## make_ts("C4DC", c4dcqc, c4dcmoi, c4dcrrf)
 
 ## ## QC and linearity based RRF adjustment
 
@@ -345,7 +294,7 @@ primary_analytes <- c("Ala" = alarrf, "Arg" = argrrf, "Cit" = citrrf, "Leu" = le
                       "C5"= c5rrf, "C5DC"= c5dcrrf, "C6"= c6qcrrf , "C8"= c8rrf, "C10"= c10rrf ,"C141"= c141qcrrf,
                       "C16" = c16rrf, "C16OH" = c16ohqcrrf, "C18" = c18rrf)
 
-secondary_analytes <- c("Gly" = glyrrf, "Orn" = ornrrf, "Val" = valrrf)
+
 
 
 rrfs_list <- c(primary_analytes, secondary_analytes)
@@ -394,4 +343,214 @@ make_mcr("C18", c18pop, c18lin, c18qc)
 ## write.csv(rbind(c5dc_ri, c3dc_ri, c4dc_ri), file = "../data/isobar_RIs.csv")
 
 
+### AA secondary
+##("Gly" "Orn" "Val" "Cre")
+## Gly
+glypop <- get_data("Gly", 1000, query_population)
+glylin <- get_data("Gly", 1000, query_linearity)
+glyrrf <- find_rrf(glypop, glylin)
+make_plots("Gly", glypop, glylin, glyrrf, 50, 25 )
+glyqc <- get_viewdata("Gly", query_qc)
+glymoi <- get_viewdata("Gly", query_moi)
+make_ts("Gly", glyqc, glymoi, glyrrf)
 
+## Orn
+ornpop <- get_data("Orn", 300, query_population)
+ornlin <- get_data("Orn", 300, query_linearity)
+ornrrf <- find_rrf(ornpop, ornlin)
+make_plots("Orn", ornpop, ornlin, ornrrf, 50, 25 )
+ornqc <- get_viewdata("Orn", query_qc)
+ornmoi <- get_viewdata("Orn", query_moi)
+make_ts("Orn", ornqc, ornmoi, ornrrf)
+
+## Val
+valpop <- get_data("Val", 400, query_population)
+vallin <- get_data("Val", 400, query_linearity)
+valrrf <- find_rrf(valpop, vallin)
+make_plots("Val", valpop, vallin, valrrf, 50, 25 )
+valqc <- get_viewdata("Val", query_qc)
+valmoi <- get_viewdata("Val", query_moi)
+make_ts("Val", valqc, valmoi, valrrf)
+
+## Cre
+params = list('CRE', 'CRT', 1000, 1000)
+crepop <- with_con(query_population, params)
+crelin <- with_con(query_linearity, params)
+crerrf <- find_rrf(crepop, crelin)
+make_plots("CRE", crepop, crelin, crerrf, 0.3, 0.1)
+view_params <- list('CRE', 'CRT')
+creqc <- with_con(query_qc, view_params)
+cremoi <- with_con(query_moi, view_params)
+make_ts("CRE", creqc, cremoi, crerrf)
+
+
+### Secondary ACs
+##"C4" "C51" "C3DC_C4OH" "C4DC_C5OH" "C81" "C101" "C121" "C12" "C142" "C14" "C14OH" "C161OH" "C182" "C181" "C181OH"
+
+## Secondary AC
+
+## C4
+c4pop <- get_data("C4", 1, query_population)
+c4lin <- get_data("C4", 1, query_linearity)
+c4rrf <- find_rrf(c4pop, c4lin)
+make_plots("C4", c4pop, c4lin, c4rrf, 0.5, 0.2)
+c4qc <- get_viewdata("C4", query_qc)
+c4moi <- get_viewdata("C4", query_moi)
+make_ts("C4", c4qc, c4moi, c4rrf)
+
+## C5:1
+c51pop <- get_data("C5:1", 1, query_population)
+c51lin <- get_data("C5:1", 1, query_linearity)
+c51rrf <- find_rrf(c51pop, c51lin)
+make_plots("C51", c51pop, c51lin, c51rrf, 0.5, 0.2 )
+c51qc <- get_viewdata("C5:1", query_qc)
+c51moi <- get_viewdata("C5:1", query_moi)
+make_ts("C51", c51qc, c51moi, c51rrf)
+
+
+## C3DC_C4OH
+params = list('C3DC_C4OH', 'C4OH', 2.0, 2.0)
+c3dcpop <- with_con(query_population, params)
+c3dclin <- with_con(query_linearity, params)
+c3dcrrf <- find_rrf(c3dcpop, c3dclin)
+make_plots("C3DC_C4OH", c3dcpop, c3dclin, c3dcrrf, 0.3, 0.1)
+view_params <- list('C3DC_C4OH', 'C3DC')
+c3dcqc <- with_con(query_qc, view_params)
+c3dcmoi <- with_con(query_moi, view_params)
+make_ts("C3DC_C4OH", c3dcqc, c3dcmoi, c3dcrrf)
+
+
+## C4DC
+params = list('C4DC_C5OH', 'C5OH', 2.0, 2.0)
+c4dcpop <- with_con(query_population, params)
+c4dclin <- with_con(query_linearity, params)
+c4dcrrf <- find_rrf(c4dcpop, c4dclin)
+make_plots("C4DC_C5OH", c4dcpop, c4dclin, c4dcrrf, 0.3, 0.1)
+view_params <- list('C4DC_C5OH', 'C5OH')
+c4dcqc <- with_con(query_qc, view_params)
+c4dcmoi <- with_con(query_moi, view_params)
+make_ts("C4DC_C5OH", c4dcqc, c4dcmoi, c4dcrrf)
+
+
+## C8:1
+c81pop <- get_data("C8:1", 1, query_population)
+c81lin <- get_data("C8:1", 1, query_linearity)
+c81rrf <- find_rrf(c81pop, c81lin)
+make_plots("C81", c81pop, c81lin, c81rrf, 0.5, 0.2 )
+c81qc <- get_viewdata("C8:1", query_qc)
+c81moi <- get_viewdata("C8:1", query_moi)
+make_ts("C81", c81qc, c81moi, c81rrf)
+
+
+## C10:1
+c101pop <- get_data("C10:1", 1, query_population)
+c101lin <- get_data("C10:1", 1, query_linearity)
+c101rrf <- find_rrf(c101pop, c101lin)
+make_plots("C101", c101pop, c101lin, c101rrf, 0.5, 0.2 )
+c101qc <- get_viewdata("C10:1", query_qc)
+c101moi <- get_viewdata("C10:1", query_moi)
+make_ts("C101", c101qc, c101moi, c101rrf)
+
+
+## C12:1
+c121pop <- get_data("C12:1", 1, query_population)
+c121lin <- get_data("C12:1", 1, query_linearity)
+c121rrf <- find_rrf(c121pop, c121lin)
+make_plots("C121", c121pop, c121lin, c121rrf, 0.5, 0.2 )
+c121qc <- get_viewdata("C12:1", query_qc)
+c121moi <- get_viewdata("C12:1", query_moi)
+make_ts("C121", c121qc, c121moi, c121rrf)
+
+
+## C12
+c12pop <- get_data("C12", 1, query_population)
+c12lin <- get_data("C12", 1, query_linearity)
+c12rrf <- find_rrf(c12pop, c12lin)
+make_plots("C12", c12pop, c12lin, c12rrf, 0.5, 0.2)
+c12qc <- get_viewdata("C12", query_qc)
+c12moi <- get_viewdata("C12", query_moi)
+make_ts("C12", c12qc, c12moi, c12rrf)
+
+## C142
+c142pop <- get_data("C14:2", 1, query_population)
+c142lin <- get_data("C14:2", 1, query_linearity)
+c142rrf <- find_rrf(c142pop, c142lin)
+make_plots("C142", c142pop, c142lin, c142rrf, 0.5, 0.2 )
+c142qc <- get_viewdata("C14:2", query_qc)
+c142moi <- get_viewdata("C14:2", query_moi)
+make_ts("C142", c142qc, c142moi, c142rrf)
+
+
+## C14
+c14pop <- get_data("C14", 1, query_population)
+c14lin <- get_data("C14", 1, query_linearity)
+c14rrf <- find_rrf(c14pop, c14lin)
+make_plots("C14", c14pop, c14lin, c14rrf, 0.5, 0.2)
+c14qc <- get_viewdata("C14", query_qc)
+c14moi <- get_viewdata("C14", query_moi)
+make_ts("C14", c14qc, c14moi, c14rrf)
+
+
+## C14OH
+c14ohpop <- get_data("C14OH", 1, query_population)
+c14ohlin <- get_data("C14OH", 1, query_linearity)
+c14ohrrf <- find_rrf(c14ohpop, c14ohlin)
+make_plots("C14OH", c14ohpop, c14ohlin, c14ohrrf, 0.5, 0.2)
+c14ohqc <- get_viewdata("C14OH", query_qc)
+c14ohmoi <- get_viewdata("C14OH", query_moi)
+make_ts("C14OH", c14ohqc, c14ohmoi, c14ohrrf)
+
+##C161OH 
+c161ohpop <- get_data("C16:1OH", 1, query_population)
+c161ohlin <- get_data("C16:1OH", 1, query_linearity)
+c161ohrrf <- find_rrf(c161ohpop, c161ohlin)
+make_plots("C161OH", c161ohpop, c161ohlin, c161ohrrf, 0.5, 0.2)
+c161ohqc <- get_viewdata("C16:1OH", query_qc)
+c161ohmoi <- get_viewdata("C16:1OH", query_moi)
+make_ts("C161OH", c161ohqc, c161ohmoi, c161ohrrf)
+
+## C182
+c182pop <- get_data("C18:2", 1, query_population)
+c182lin <- get_data("C18:2", 1, query_linearity)
+c182rrf <- find_rrf(c182pop, c182lin)
+make_plots("C182", c182pop, c182lin, c182rrf, 0.5, 0.2 )
+c182qc <- get_viewdata("C18:2", query_qc)
+c182moi <- get_viewdata("C18:2", query_moi)
+make_ts("C182", c182qc, c182moi, c182rrf)
+
+## C181
+c181pop <- get_data("C18:1", 4, query_population)
+c181lin <- get_data("C18:1", 4, query_linearity)
+c181rrf <- find_rrf(c181pop, c181lin)
+make_plots("c181", c181pop, c181lin, c181rrf, 0.5, 0.2 )
+c181qc <- get_viewdata("C18:1", query_qc)
+c181moi <- get_viewdata("C18:1", query_moi)
+make_ts("c181", c181qc, c181moi, c181rrf)
+
+##C18OH 
+c18ohpop <- get_data("C18OH", 1, query_population)
+c18ohlin <- get_data("C18OH", 1, query_linearity)
+c18ohrrf <- find_rrf(c18ohpop, c18ohlin)
+make_plots("C18OH", c18ohpop, c18ohlin, c18ohrrf, 0.5, 0.2)
+c18ohqc <- get_viewdata("C18OH", query_qc)
+c18ohmoi <- get_viewdata("C18OH", query_moi)
+make_ts("C18OH", c18ohqc, c18ohmoi, c18ohrrf)
+
+
+##C181OH 
+c181ohpop <- get_data("C18:1OH", 1, query_population)
+c181ohlin <- get_data("C18:1OH", 1, query_linearity)
+c181ohrrf <- find_rrf(c181ohpop, c181ohlin)
+make_plots("C181OH", c181ohpop, c181ohlin, c181ohrrf, 0.5, 0.2)
+c181ohqc <- get_viewdata("C18:1OH", query_qc)
+c181ohmoi <- get_viewdata("C18:1OH", query_moi)
+make_ts("C181OH", c181ohqc, c181ohmoi, c181ohrrf)
+
+
+secondary_analytes <- c("Gly" = glyrrf, "Orn" = ornrrf, "Val" = valrrf, "Cre" = crerrf,
+                        "C4" = c4rrf, "C51" = c51rrf, "C3DC_C4OH" = c3dcrrf, "C4DC_C5OH" = c4dcrrf, "C81" = c81rrf, "C101" = c101rrf,
+                        "C121" = c121rrf, "C12" = c12rrf, "C142" = c142rrf, "C14" = c14rrf, "C14OH" = c14ohrrf, "C161OH" = c161ohrrf,
+                        "C182" = c182rrf, "C181" = c181rrf, "C181OH" = c181ohrrf )
+rrfs_list <- c(secondary_analytes)
+rrf_file_name <- paste0("../data/", instrument_name, "_secondary_RRF.csv")
+write.csv(rrfs_list, file = rrf_file_name)
