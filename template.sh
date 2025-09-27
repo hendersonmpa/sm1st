@@ -175,7 +175,7 @@ echo "" >> "$org_file_name"
 
 
 
-echo "* Secondary Analyte" >> "$org_file_name"
+echo "* Secondary Analytes" >> "$org_file_name"
 echo "** Population and linearity based RRF" >> "$org_file_name"
 
 # Secondary Amino acids

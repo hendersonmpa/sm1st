@@ -4,7 +4,7 @@
 
 library("tidyverse")
 
-instrument_name <- "Larry" ## used to set figures subdirectory in "functions"
+instrument_name <- "Joe" ## used to set figures subdirectory in "functions"
 
 source("./functions.r")
 source("./queries.r")
@@ -351,11 +351,11 @@ params = list('CRT', 1000, 1000, instrument_name)
 crepop <- with_con(make_csv_query("Cre", pop_csv_query), params)
 crelin <- with_con(make_csv_query("Cre", linearity_csv_query) , params)
 crerrf <- find_rrf(crepop, crelin)
-make_plots("CRE", crepop, crelin, crerrf, 0.3, 0.1)
+make_plots("Cre", crepop, crelin, crerrf, 50, 25)
 view_params <- list('CRT', instrument_name)
 creqc <- with_con(make_csv_query("Cre",qc_csv_query) , view_params)
 cremoi <- with_con(make_csv_query("Cre",moi_csv_query) , view_params)
-make_ts("CRE", creqc, cremoi, crerrf)
+make_ts("Cre", creqc, cremoi, crerrf)
 
 
 ### AC secondary
@@ -394,14 +394,14 @@ make_ts("C3DC_C4OH", c3dcqc, c3dcmoi, c3dcrrf)
 
 ## C4DC_C5OH
 params = list('C5OH', 2.0, 2.0, instrument_name)
-c3dcpop <- with_con(make_csv_query("C4DC_C5OH", pop_csv_query), params)
-c3dclin <- with_con(make_csv_query("C4DC_C5OH", linearity_csv_query), params)
-c3dcrrf <- find_rrf(c3dcpop, c3dclin)
-make_plots("C4DC_C5OH", c3dcpop, c3dclin, c3dcrrf, 0.3, 0.1)
+c4dcpop <- with_con(make_csv_query("C4DC_C5OH", pop_csv_query), params)
+c4dclin <- with_con(make_csv_query("C4DC_C5OH", linearity_csv_query), params)
+c4dcrrf <- find_rrf(c4dcpop, c4dclin)
+make_plots("C4DC_C5OH", c4dcpop, c4dclin, c4dcrrf, 0.4, 0.1)
 view_params <- list('C5OH', instrument_name)
-c3dcqc <- with_con(make_csv_query("C5OH", qc_csv_query), view_params)
-c3dcmoi <- with_con(make_csv_query("C5OH", moi_csv_query), view_params)
-make_ts("C4DC_C5OH", c3dcqc, c3dcmoi, c3dcrrf)
+c4dcqc <- with_con(make_csv_query("C5OH", qc_csv_query), view_params)
+c4dcmoi <- with_con(make_csv_query("C5OH", moi_csv_query), view_params)
+make_ts("C4DC_C5OH", c4dcqc, c4dcmoi, c4dcrrf)
 
 
 ## C8:1
@@ -418,14 +418,14 @@ make_ts("C81", c81qc, c81moi, c81rrf)
 
 ## C10:1
 params = list('C10:1', 1, 1, instrument_name)
-C101pop <- with_con(make_csv_query("C101", pop_csv_query), params)
-C101lin <-  with_con(make_csv_query("C101", linearity_csv_query) , params)
-C101rrf <- find_rrf(C101pop, C101lin)
+c101pop <- with_con(make_csv_query("C101", pop_csv_query), params)
+c101lin <-  with_con(make_csv_query("C101", linearity_csv_query) , params)
+c101rrf <- find_rrf(c101pop, c101lin)
 make_plots("C101", C101pop, C101lin, C101rrf, 0.5, 0.2 )
 view_params <- list('C10:1', instrument_name)
-C101qc <- with_con(make_csv_query("C101",qc_csv_query) , view_params)
-C101moi <- with_con(make_csv_query("C101",moi_csv_query) , view_params)
-make_ts("C101", C101qc, C101moi, C101rrf)
+c101qc <- with_con(make_csv_query("C101",qc_csv_query) , view_params)
+c101moi <- with_con(make_csv_query("C101",moi_csv_query) , view_params)
+make_ts("C101", c101qc, c101moi, c101rrf)
 
 
 ## C12:1
@@ -503,7 +503,7 @@ c182moi <- with_con(make_csv_query("C182",moi_csv_query) , view_params)
 make_ts("C182", c182qc, c182moi, c182rrf)
 
 ## C181
-params = list('C18:1', 1, 1, instrument_name)
+params = list('C18:1', 4, 4, instrument_name)
 c181pop <- with_con(make_csv_query("C181", pop_csv_query), params)
 c181lin <-  with_con(make_csv_query("C181", linearity_csv_query) , params)
 c181rrf <- find_rrf(c181pop, c181lin)

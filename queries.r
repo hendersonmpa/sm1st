@@ -37,7 +37,7 @@ and sm1.analyte = ?
 and aaac.analyte = ?
 and sm1.result <= ?
 and aaac.result <= ?
-and date(sm1.createdate) >  between '2025-06-01' and '2025-09-16'
+and date(sm1.createdate)  between '2025-06-01' and '2025-09-16'
 and date(sm1.createdate) not in ('2025-07-15', '2025-07-16', '2025-07-17')
 and sm1.plate not in ('SM1ST2025010079', 'SM1ST2025010080', 'SM1ST2025010082', 'SM1ST2025010084', 'SM1ST2025010085', 'SM1ST2025010105', 'SM1ST2025010043', 'SM1ST2025010044', 'SM1ST2025010258', 'SM1ST2025010259', 'SM1ST2025010260')"
 
